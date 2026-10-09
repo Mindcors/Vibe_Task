@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Python Mini Course — аналог FreeCodeCamp</title>
+  <style>
+    :root { --c1:#2b2d42; --c2:#3d405b; --c3:#f2eddd; --c4:#8d97ad; --ok:#2ecc71; --err:#e74c3c; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:0; background: var(--c3); color: var(--c1); line-height: 1.5; }
+    .container { max-width: 960px; margin: 0 auto; padding: 1rem; }
+    h1, h2, h3 { color: var(--c1); }
+    nav { margin-bottom: 1.2rem; }
+    nav button { background: var(--c2); color: white; border: none; padding: 0.5rem 0.8rem; margin-right: 0.4rem; cursor: pointer; border-radius: 4px; }
+    nav button.active { background: #fff; color: var(--c1); font-weight: bold; }
+    section { display: none; animation: fadeIn 0.3s ease; }
+    section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .task { border: 1px solid var(--c4); padding: 1rem; background: #fff; margin: 1.2rem 0; border-radius: 6px; }
+    textarea { width: 100%; height: 120px; font-family: ui-monospace; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; background: #fafafa; }
+    button.run { background: var(--c1); color: white; padding: 0.6rem 1rem; border: none; border-radius: 4px; cursor: pointer; margin-top: 0.5rem; }
+    .result { margin-top: 0.6rem; padding: 0.6rem; border-radius: 4px; display: inline-block; }
+    .ok { background: #eafaf1; color: #27ae60; }
+    .err { background: #fdedec; color: #c0392b; }
+    details { margin: 1rem 0; }
+    summary { cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Python Mini Course</h1>
+    <nav id="nav">
+      <button onclick="switchSection('intro')" class="active">Введение</button>
+      <button onclick="switchSection('types')">Типы данных</button>
+      <button onclick="switchSection('control')">Условия и циклы</button>
+      <button onclick="switchSection('functions')">Функции</button>
+      <button onclick="switchSection('practice')">Практика</button>
+    </nav>
+
+    <!-- Intro -->
+    <section id="intro" class="active">
+      <h2>Введение в Python</h2>
+      <p>Python — простой и мощный язык. Пишем код в файлах .py или прямо в интерпретаторе. В этом мини‑курсе мы разберём основы и сразу будем писать и проверять код.</p>
+      <details><summary>Как это работает</summary><p>В этом файле встроен «песочница»: ты пишешь код в текстовом поле, нажимаешь «Запустить», и он выполняется в браузере (через Pyodide). Результат выводится ниже.</p></details>
+      <div class="task">
+        <h3>Задание 1: Привет, мир</h3>
+        <p>Напиши код, который выводит: <code>Привет, мир!</code></p>
+        <textarea id="code-intro">print("Привет, мир!")</textarea>
+        <button class="run" onclick="runTask('intro')">Запустить</button>
+        <div id="result-intro" class="result"></div>
+      </div>
+    </section>
+
+    <!-- Types -->
+    <section id="types">
+      <h2>Типы данных и переменные</h2>
+      <p>Основные типы: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>, <code>list</code>, <code>dict</code>. Переменные создаются присваиванием.</p>
+      <pre><code># Пример
+age = 25
+pi = 3.14
+name = "Алиса"
+is_ready = True
+numbers = [1, 2, 3]
+person = {"name": "Алиса", "age": 25}
+</code></pre>
+      <div class="task">
+        <h3>Задание 2: Создай переменные</h3>
+        <p>Создай переменные: <code>city</code> (строка), <code>population</code> (число), <code>is_capital</code> (булево). Выведи их через <code>print</code>.</p>
+        <textarea id="code-types">city = "Москва"\npopulation = 13000000\nis_capital = True\nprint(city, population, is_capital)</textarea>
+        <button class="run" onclick="runTask('types')">Запустить</button>
+        <div id="result-types" class="result"></div>
+      </div>
+    </section>
+
+    <!-- Control -->
+    <section id="control">
+      <h2>Условия и циклы</h2>
+      <p>Условные конструкции <code>if/elif/else</code> и циклы <code>for</code>, <code>while</code> помогают управлять ходом программы.</p>
+      <pre><code>x = 10
+if x > 5:
+    print("Больше 5")
+else:
+    print("5 или меньше")
+
+for i in range(3):
+    print(i)
+</code></pre>
+      <div class="task">
+        <h3>Задание 3: Чётное или нечётное</h3>
+        <p>С помощью <code>if</code> выведи, является ли число <code>num = 7</code> чётным или нечётным.</p>
+        <textarea id="code-control">num = 7\nif num % 2 == 0:\n    print("Чётное")\nelse:\n    print("Нечётное")</textarea>
+        <button class="run" onclick="runTask('control')">Запустить</button>
+        <div id="result-control" class="result"></div>
+      </div>
+    </section>
+
+    <!-- Functions -->
+    <section id="functions">
+      <h2>Функции</h2>
+      <p>Функции позволяют переиспользовать код. Объявляются через <code>def</code>.</p>
+      <pre><code>def greet(name):
+    return f"Привет, {name}!"
+
+print(greet("Мир"))
+</code></pre>
+      <div class="task">
+        <h3>Задание 4: Напиши функцию</h3>
+        <p>Определи функцию <code>square(x)</code>, которая возвращает квадрат числа. Вызови её с числом 5 и выведи результат.</p>
+        <textarea id="code-functions">def square(x):\n    return x * x\n\nprint(square(5))</textarea>
+        <button class="run" onclick="runTask('functions')">Запустить</button>
+        <div id="result-functions" class="result"></div>
+      </div>
+    </section>
+
+    <!-- Practice -->
+    <section id="practice">
+      <h2>Практика: мини‑задача</h2>
+      <p>Объединим всё: переменные, условия, циклы и функции. Напиши программу, которая:</p>
+      <ol>
+        <li>Определяет функцию <code>check_age(age)</code>: если возраст >= 18 — «Доступ разрешён», иначе — «Доступ запрещён».</li>
+        <li>Создаёт список возрастов: <code>[15, 18, 20, 17]</code>.</li>
+        <li>Проходит циклом по списку и для каждого возраста вызывает функцию, выводя результат.</li>
+      </ol>
+      <textarea id="code-practice">def check_age(age):\n    if age >= 18:\n        return "Доступ разрешён"\n    else:\n        return "Доступ запрещён"\n\nages = [15, 18, 20, 17]\nfor a in ages:\n    print(a, "-", check_age(a))</textarea>
+      <button class="run" onclick="runTask('practice')">Запустить</button>
+      <div id="result-practice" class="result"></div>
+    </section>
+  </div>
+
+  <!-- Pyodide: Python в браузере -->
+  <script type="module">
+    import { createPyodideWorker } from 'https://cdn.jsdelivr.net/npm/pyodide@0.26.0/pyodide.mjs';
+
+    let pyodide;
+    async function initPyodide() {
+      pyodide = await createPyodideWorker();
+      await pyodide.loadPackage(['micropip']);
+      const micropip = pyodide.pyimport('micropip');
+      // Можно ставить пакеты, если понадобятся
+    }
+    initPyodide();
+
+    function switchSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      Array.from(document.querySelectorAll('nav button')).find(btn => btn.onclick.toString().includes(id)).classList.add('active');
+    }
+
+    async function runTask(sectionId) {
+      if (!pyodide) {
+        alert('Python ещё загружается, подождите пару секунд.');
+        return;
+      }
+      const codeEl = document.getElementById(`code-${sectionId}`);
+      const resultEl = document.getElementById(`result-${sectionId}`);
+      const code = codeEl.value;
+      try {
+        const output = await pyodide.runPythonAsync(`
+import sys
+from io import StringIO
+stdout = StringIO()
+sys.stdout = stdout
+try:
+${code.replace(/\n/g, '\n    ')}
+finally:
+    sys.stdout = sys.__stdout__
+stdout.getvalue()
+        `);
+        resultEl.textContent = output || '(пустой вывод)';
+        resultEl.className = 'result ok';
+      } catch (e) {
+        resultEl.textContent = e.toString();
+        resultEl.className = 'result err';
+      }
+    }
+  </script>
+</body>
+</html>
