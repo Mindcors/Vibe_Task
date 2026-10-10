@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Навигация по проектам</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 48px 20px;
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #e6edf3;
+      background: #0d1117;
+    }
+    main { width: min(720px, 100%); margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 5vw, 36px); }
+    .subtitle { margin: 0 0 28px; color: #9da7b3; }
+    nav { display: grid; gap: 12px; }
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 18px;
+      color: #e6edf3;
+      text-decoration: none;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    a:hover, a:focus-visible {
+      background: #1c2430;
+      border-color: #58a6ff;
+      outline: none;
+    }
+    .name { font-weight: 600; overflow-wrap: anywhere; }
+    .arrow { color: #58a6ff; font-size: 20px; flex-shrink: 0; }
+    footer { margin-top: 28px; color: #8b949e; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Навигация по проектам</h1>
+    <p class="subtitle">Выберите файл, чтобы открыть нужную страницу.</p>
+
+    <nav aria-label="Список HTML-файлов">
+      <a href="./Alice_ai.html"><span class="name">Alice_ai.html</span><span class="arrow" aria-hidden="true">↗</span></a>
+      <a href="./Deepseek.html"><span class="name">Deepseek.html</span><span class="arrow" aria-hidden="true">↗</span></a>
+      <a href="./cursor_analog.html"><span class="name">cursor_analog.html</span><span class="arrow" aria-hidden="true">↗</span></a>
+      <a href="./deepseekv4flash.html"><span class="name">deepseekv4flash.html</span><span class="arrow" aria-hidden="true">↗</span></a>
+      <a href="./qwen_agent.html"><span class="name">qwen_agent.html</span><span class="arrow" aria-hidden="true">↗</span></a>
+      <a href="./qwen_web_dev.html"><span class="name">qwen_web_dev.html</span><span class="arrow" aria-hidden="true">↗</span></a>
+    </nav>
+
+  </main>
+</body>
+</html>
