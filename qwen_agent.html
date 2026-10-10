@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>freeCodeCamp — Интерактивный курс Python</title>
+<meta name="description" content="Бесплатный интерактивный курс по Python: 41 урок, 7 модулей, реальное выполнение Python в браузере (Pyodide/WASM)." />
+<style>
+/* ====== CSS ТЕМЫ (как в Next.js-версии) ====== */
+:root{
+  --bg:#0a0a23; --bg2:#1b1b32; --bg3:#2a2a40;
+  --panel:#ffffff; --panel2:#f5f6f7; --panel-border:#d0d7de;
+  --text:#0a0a23; --muted:#5b6170;
+  --accent:#2a72a5; --accent-fg:#ffffff;
+  --green:#1a7f37; --green-bg:#dafbe1;
+  --yellow:#f1be32; --yellow-fg:#0a0a23;
+  --danger:#cf222e; --danger-bg:#ffebe9;
+  --code-bg:#0d1117; --code-fg:#c9d1d9; --code-border:#30363d;
+  --kw:#ff7b72; --str:#a5d6ff; --num:#79c0ff; --bi:#d2a8ff; --com:#8b949e;
+  --shadow:0 6px 20px rgba(0,0,0,.18);
+}
+[data-theme="dark"]{
+  --bg:#0a0a23; --bg2:#1b1b32; --bg3:#3b3b5c;
+  --panel:#1b1b32; --panel2:#2a2a40; --panel-border:#3b3b5c;
+  --text:#e6e6f0; --muted:#a3a3c2;
+  --accent:#7ec8e3; --accent-fg:#0a0a23;
+  --green:#7ee787; --green-bg:#0d2818;
+  --yellow:#f1be32; --yellow-fg:#0a0a23;
+  --danger:#ff7b72; --danger-bg:#3a1216;
+  --code-bg:#0d1117; --code-fg:#c9d1d9; --code-border:#30363d;
+  --kw:#ff7b72; --str:#a5d6ff; --num:#79c0ff; --bi:#d2a8ff; --com:#8b949e;
+  --shadow:0 6px 24px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+.fcc-shell{display:flex;flex-direction:column;min-height:100vh;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.55}
+.fcc-shell *,.fcc-shell *::before,.fcc-shell *::after{box-sizing:border-box}
+
+/* header */
+.fcc-header{background:var(--bg);color:#fff;border-bottom:3px solid var(--yellow);position:sticky;top:0;z-index:30}
+.fcc-header-inner{display:flex;align-items:center;gap:12px;padding:10px 20px;max-width:1600px;margin:0 auto}
+.fcc-brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;text-decoration:none;color:#fff}
+.fcc-flame{width:30px;height:30px;flex:none;filter:drop-shadow(0 0 6px rgba(241,190,50,.5))}
+.fcc-brand-text{font-weight:800;font-size:16.5px;line-height:1;letter-spacing:-.3px}
+.fcc-brand-text small{display:block;font-weight:500;font-size:11px;color:#99c1e8;margin-top:2px;letter-spacing:.3px}
+.fcc-header-spacer{flex:1}
+.fcc-stat{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);padding:6px 10px;border-radius:999px;font-size:13px;font-weight:600}
+.fcc-stat svg{width:16px;height:16px}
+.fcc-icon-btn{background:transparent;border:none;color:#fff;cursor:pointer;padding:6px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;transition:background .15s}
+.fcc-icon-btn:hover{background:rgba(255,255,255,.12)}
+.fcc-icon-btn svg{width:20px;height:20px}
+.fcc-donate{background:var(--yellow);color:var(--yellow-fg);border:none;font-weight:800;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:transform .1s,box-shadow .15s}
+.fcc-donate:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(241,190,50,.4)}
+.fcc-donate:active{transform:translateY(0)}
+
+/* subbar */
+.fcc-subbar{background:var(--bg2);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.fcc-subbar-inner{display:flex;align-items:center;gap:10px;padding:8px 16px;max-width:1600px;margin:0 auto;font-size:13px;flex-wrap:wrap;overflow:hidden}
+.fcc-crumb{color:#c9d1d9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.fcc-crumb b{color:#fff}
+.fcc-progress-pill{margin-left:auto;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.08);padding:4px 10px 4px 8px;border-radius:999px;align-self:center}
+.fcc-progress-pill .bar{width:140px;height:7px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.3)}
+.fcc-progress-pill .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--green),#99e2a3);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.fcc-progress-pill > span:first-child{color:#fff;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.fcc-burger{display:none}
+
+/* layout */
+.fcc-body{flex:1;display:grid;grid-template-columns:300px 1fr;max-width:1600px;margin:0 auto;width:100%}
+
+/* sidebar */
+.fcc-sidebar{background:var(--bg2);color:#fff;border-right:1px solid rgba(255,255,255,.07);height:calc(100vh - 102px);position:sticky;top:102px;overflow:hidden;display:flex;flex-direction:column}
+.fcc-drawer-head{display:none}
+.fcc-side-search{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.07);position:relative}
+.fcc-side-search svg.s-ico{position:absolute;left:22px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#8b949e;pointer-events:none}
+.fcc-side-search input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;padding:8px 10px 8px 32px;border-radius:8px;font-size:13px;outline:none;transition:border-color .15s,background .15s}
+.fcc-side-search input:focus{border-color:var(--yellow);background:rgba(255,255,255,.09)}
+.fcc-side-search input::placeholder{color:#8b949e}
+.fcc-side-scroll{overflow-y:auto;flex:1;padding:4px 0 24px}
+.fcc-side-scroll::-webkit-scrollbar{width:8px}
+.fcc-side-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px}
+.fcc-mod{padding:6px 4px}
+.fcc-mod-title{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:#99c1e8;cursor:pointer;border-radius:8px;line-height:1.25}
+.fcc-mod-title:hover{background:rgba(255,255,255,.05)}
+.fcc-mod-title .ico{font-size:15px;flex:none}
+.fcc-mod-title .mtxt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.fcc-mod-title .cnt{font-size:11px;color:#8b949e;font-weight:600;flex:none}
+.fcc-mod-title .chev{transition:transform .2s;color:#8b949e;flex:none}
+.fcc-mod.open .fcc-mod-title .chev{transform:rotate(90deg)}
+.fcc-mod-progress{height:2px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin:0 12px 4px}
+.fcc-mod-progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--green),#99e2a3);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.fcc-lessons{display:none;padding:2px 0 6px}
+.fcc-mod.open .fcc-lessons{display:block}
+.fcc-lesson{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 30px;cursor:pointer;font-size:13.5px;color:#c9d1d9;border-left:2px solid transparent;transition:background .12s,color .12s}
+.fcc-lesson:hover{background:rgba(255,255,255,.05);color:#fff}
+.fcc-lesson.active{background:rgba(241,190,50,.18);color:#fff;border-left-color:var(--yellow);box-shadow:inset 3px 0 0 var(--yellow)}
+.fcc-lesson .check{width:18px;height:18px;flex:none;border-radius:50%;border:2px solid rgba(255,255,255,.25);display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:transparent;background:transparent;transition:all .2s}
+.fcc-lesson.done .check{background:var(--green);border-color:var(--green);color:#0a0a23}
+.fcc-lesson .num{font-size:11px;color:#8b949e;font-weight:600;width:18px;flex:none}
+.fcc-lesson .ltitle{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fcc-lesson .lm-bm{opacity:.85}
+.fcc-lesson.capstone{background:linear-gradient(90deg,rgba(241,190,50,.08),transparent);border-radius:0 8px 8px 0;margin-right:4px}
+.fcc-lesson.capstone .ltitle{font-weight:700}
+.fcc-lesson.capstone.active{background:rgba(241,190,50,.18)}
+.fcc-lesson .cap-ico{font-size:13px;flex:none;width:18px;text-align:center}
+.fcc-mod.complete .fcc-mod-title{background:linear-gradient(90deg,rgba(126,231,135,.1),transparent)}
+.fcc-mod.complete .fcc-mod-title .ico{filter:drop-shadow(0 0 4px rgba(126,231,135,.5))}
+.fcc-mod-badge{position:absolute;top:6px;right:8px;width:16px;height:16px;border-radius:50%;background:var(--green);display:none;align-items:center;justify-content:center;box-shadow:0 0 8px rgba(126,231,135,.6);animation:fccpop .3s ease}
+.fcc-mod.complete .fcc-mod-badge{display:flex}
+.fcc-mod-badge svg{width:10px;height:10px;color:#0a0a23}
+@keyframes fccpop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+/* main */
+.fcc-main{padding:0;background:var(--panel);min-width:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.fcc-lesson-head{display:flex;align-items:flex-start;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--panel-border);background:linear-gradient(180deg,var(--panel),var(--panel2))}
+.fcc-lesson-head .lbadge{width:40px;height:40px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg2);color:#fff}
+.fcc-lesson-head h1{margin:0;font-size:20px;font-weight:800;letter-spacing:-.3px}
+.fcc-lesson-head .sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+.fcc-lesson-head .head-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.fcc-lesson-head .xptag{margin-left:auto;background:var(--green-bg);color:var(--green);font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;white-space:nowrap;align-self:center}
+
+.fcc-grid{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:1024px){.fcc-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}}
+.fcc-col{min-width:0;display:flex;flex-direction:column}
+
+.fcc-meta-tags{display:flex;align-items:center;gap:6px;margin-top:7px;flex-wrap:wrap}
+.fcc-meta-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid transparent}
+.fcc-meta-tag.diff-easy{background:rgba(126,231,135,.12);color:var(--green);border-color:rgba(126,231,135,.25)}
+.fcc-meta-tag.diff-mid{background:rgba(241,190,50,.12);color:var(--yellow);border-color:rgba(241,190,50,.25)}
+.fcc-meta-tag.diff-hard{background:rgba(255,123,114,.12);color:var(--danger);border-color:rgba(255,123,114,.25)}
+.fcc-meta-tag.time{background:rgba(126,200,227,.1);color:#7ec8e3;border-color:rgba(126,200,227,.2)}
+.fcc-timer{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#7ec8e3;background:rgba(126,200,227,.1);border:1px solid rgba(126,200,227,.2);padding:2px 8px;border-radius:999px}
+.fcc-timer svg{width:11px;height:11px}
+.fcc-timer .t-num{font-variant-numeric:tabular-nums;min-width:32px}
+
+/* instructions */
+.fcc-instr{padding:20px 22px 20px;overflow-y:auto}
+.fcc-instr h2{font-size:15px;margin:20px 0 10px;color:var(--text)}
+.fcc-instr p{margin:0 0 14px;color:var(--text);line-height:1.65}
+.fcc-instr p code{background:var(--bg3);color:#fff;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+[data-theme="light"] .fcc-instr p code{background:#eef0f3;color:#0a0a23}
+.fcc-instr ul{margin:0 0 14px;padding-left:20px}
+.fcc-instr li{margin:5px 0;line-height:1.6}
+.fcc-instr .note{background:var(--green-bg);border-left:4px solid var(--green);padding:11px 16px;border-radius:8px;margin:0 0 16px;color:var(--text);font-size:13.5px;line-height:1.55}
+.fcc-instr .example{background:var(--code-bg);color:var(--code-fg);border:1px solid var(--code-border);border-radius:10px;padding:14px 16px;margin:0 0 14px;overflow:auto;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.6}
+.fcc-instr .example .t-kw{color:var(--kw)} .fcc-instr .example .t-str{color:var(--str)} .fcc-instr .example .t-num{color:var(--num)} .fcc-instr .example .t-bi{color:var(--bi)} .fcc-instr .example .t-com{color:var(--com);font-style:italic}
+.fcc-task{margin-top:14px;background:var(--panel2);border:1px solid var(--panel-border);border-radius:12px;padding:14px 16px}
+.fcc-task h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.fcc-task ol{margin:0;padding-left:20px}
+.fcc-task li{margin:5px 0;color:var(--text)}
+
+/* tests panel */
+.fcc-tests{padding:0 20px 8px}
+.fcc-tests h3{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:14px 0 8px}
+.fcc-test{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13.5px;margin-bottom:4px;border:1px solid var(--panel-border);background:var(--panel)}
+.fcc-test .dot{width:18px;height:18px;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;border:2px solid var(--muted);color:transparent}
+.fcc-test.pass{background:var(--green-bg);border-color:var(--green)}
+.fcc-test.pass .dot{background:var(--green);border-color:var(--green);color:#0a0a23}
+.fcc-test.fail{background:var(--danger-bg);border-color:var(--danger)}
+.fcc-test.fail .dot{background:var(--danger);border-color:var(--danger);color:#fff}
+.fcc-test .label{flex:1}
+.fcc-test .label code{font-family:ui-monospace,monospace;font-size:12px;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px}
+[data-theme="dark"] .fcc-test .label code{background:rgba(255,255,255,.1)}
+
+/* lesson nav */
+.fcc-lesson-nav{display:flex;gap:8px;padding:14px 20px;border-top:2px solid var(--panel-border);background:var(--panel2);align-items:center}
+.fcc-lesson-nav .fcc-btn{background:var(--panel);border:1px solid var(--panel-border);color:var(--text)}
+.fcc-lesson-nav .fcc-btn:hover{background:var(--bg3);color:#fff}
+.fcc-lesson-nav .spacer{flex:1}
+
+/* editor */
+.fcc-editor-col{background:var(--code-bg);border-left:1px solid var(--code-border);min-height:320px}
+@media(max-width:1023px){.fcc-editor-col{border-left:none;border-top:1px solid var(--code-border)}}
+.fcc-editor-col.success{position:relative}
+.fcc-editor-col.success::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;box-shadow:inset 0 0 0 2px var(--green),inset 0 0 30px rgba(126,231,135,.15);animation:fccglow .6s ease}
+@keyframes fccglow{0%{box-shadow:inset 0 0 0 0 var(--green),inset 0 0 0 rgba(126,231,135,0)}50%{box-shadow:inset 0 0 0 3px var(--green),inset 0 0 40px rgba(126,231,135,.3)}100%{box-shadow:inset 0 0 0 2px var(--green),inset 0 0 30px rgba(126,231,135,.15)}}
+.fcc-editor-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#161b22;border-bottom:1px solid var(--code-border);flex-wrap:wrap}
+.fcc-editor-bar .tabs{display:flex;gap:4px;align-items:center}
+.fcc-tab{background:transparent;border:none;color:#8b949e;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:color .15s,background .15s,box-shadow .2s;position:relative}
+.fcc-tab:hover{color:#c9d1d9}
+.fcc-tab.active{background:var(--code-bg);color:#fff;box-shadow:inset 0 2px 0 0 var(--yellow)}
+.fcc-tab:focus-visible{outline:2px solid var(--yellow);outline-offset:-2px}
+.fcc-editor-bar .spacer{flex:1}
+.fcc-btn{border:none;cursor:pointer;font-weight:700;font-size:13px;border-radius:8px;padding:8px 14px;display:inline-flex;align-items:center;gap:6px;transition:transform .08s,opacity .15s}
+.fcc-btn:active{transform:translateY(1px)}
+.fcc-btn:disabled{opacity:.6;cursor:not-allowed}
+.fcc-btn.run{background:var(--yellow);color:var(--yellow-fg);box-shadow:0 4px 14px rgba(241,190,50,.3),inset 0 1px 0 rgba(255,255,255,.3)}
+.fcc-btn.check{background:var(--green);color:#0a0a23;box-shadow:0 4px 14px rgba(126,231,135,.25),inset 0 1px 0 rgba(255,255,255,.3)}
+.fcc-btn.run:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.fcc-btn.check:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.fcc-btn.ghost{background:rgba(255,255,255,.06);color:#c9d1d9}
+.fcc-btn.ghost:hover{background:rgba(255,255,255,.12)}
+.fcc-btn:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+
+.fcc-editor{position:relative;background:var(--code-bg);display:flex;flex:1;min-height:240px}
+.fcc-gutter{flex:none;width:46px;background:#0d1117;color:#6e7681;text-align:right;padding:14px 8px 14px 0;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.6;overflow:hidden;user-select:none;border-right:1px solid var(--code-border)}
+.fcc-gutter .ln{height:calc(1.6em)}
+.fcc-editor-area{position:relative;flex:1;overflow:hidden}
+.fcc-hl,.fcc-ta{position:absolute;inset:0;margin:0;padding:16px 18px;border:none;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.6;white-space:pre;tab-size:4;-moz-tab-size:4;overflow:auto;background:transparent}
+.fcc-hl{pointer-events:none;color:var(--code-fg);overflow:hidden;z-index:1}
+.fcc-hl code{font:inherit;white-space:pre}
+.fcc-ta{resize:none;outline:none;z-index:2;color:transparent;caret-color:var(--yellow);-webkit-text-fill-color:transparent}
+.fcc-ta::selection{background:rgba(126,200,227,.3)}
+.fcc-hl .t-kw{color:var(--kw)} .fcc-hl .t-str{color:var(--str)} .fcc-hl .t-num{color:var(--num)} .fcc-hl .t-bi{color:var(--bi)} .fcc-hl .t-com{color:var(--com);font-style:italic}
+
+/* console */
+.fcc-console{background:#010409;border-top:1px solid var(--code-border);min-height:140px;max-height:300px;overflow:auto;padding:0;scrollbar-width:thin;scrollbar-color:#30363d transparent}
+.fcc-console::-webkit-scrollbar{width:10px;height:10px}
+.fcc-console::-webkit-scrollbar-track{background:#010409}
+.fcc-console::-webkit-scrollbar-thumb{background:#30363d;border-radius:8px;border:2px solid #010409}
+.fcc-console::-webkit-scrollbar-thumb:hover{background:#484f58}
+.fcc-console .cline{padding:5px 16px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.5;border-bottom:1px solid rgba(255,255,255,.04);white-space:pre-wrap;word-break:break-word}
+.fcc-console .cline.info{color:#8b949e}
+.fcc-console .cline.out{color:#c9d1d9}
+.fcc-console .cline.err{color:#ff7b72}
+.fcc-console .cline.ok{color:#7ee787}
+.fcc-console .cline.sys{color:#79c0ff}
+.fcc-console .prompt{color:#7ee787;font-weight:700}
+.fcc-console-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:36px 20px;text-align:center;color:#6e7681;font-size:13px}
+.fcc-console-empty .ce-ico{width:40px;height:40px;opacity:.5}
+.fcc-console-empty .ce-kbd{display:inline-flex;gap:4px;margin-top:4px}
+
+/* footer */
+.fcc-footer{margin-top:auto;background:var(--bg2);color:#c9d1d9;padding:10px 20px;font-size:12px;border-top:1px solid rgba(255,255,255,.07)}
+.fcc-footer-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fcc-footer a{color:#99c1e8;text-decoration:none;font-weight:600}
+.fcc-footer a:hover{text-decoration:underline}
+.fcc-footer span:first-child{color:#8b949e}
+.fcc-footer .grow{flex:1}
+
+/* toast */
+.fcc-toast-wrap{position:fixed;top:78px;right:20px;z-index:80;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.fcc-toast{pointer-events:auto;background:var(--panel);border:1px solid var(--panel-border);box-shadow:var(--shadow);border-radius:12px;padding:12px 16px;min-width:240px;max-width:340px;display:flex;align-items:center;gap:10px;animation:fccslide .25s ease}
+.fcc-toast.success{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.fcc-toast.error{border-color:var(--danger);background:var(--danger-bg);color:var(--danger)}
+.fcc-toast.info{border-color:var(--accent);background:rgba(126,200,227,.1);color:#7ec8e3}
+.fcc-toast .em{font-size:20px}
+@keyframes fccslide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* confetti */
+.fcc-confetti{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+.fcc-confetti span{position:absolute;top:-12px;width:10px;height:14px;opacity:.9;animation:fccfall linear forwards}
+@keyframes fccfall{to{transform:translateY(105vh) rotate(540deg);opacity:1}}
+
+/* modal */
+.fcc-modal-back{position:fixed;inset:0;background:rgba(10,10,35,.6);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.fcc-modal{background:var(--panel);border-radius:16px;max-width:440px;width:100%;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.fcc-modal .mh{background:var(--bg2);color:#fff;padding:16px 20px;font-weight:800;font-size:17px;display:flex;align-items:center;gap:10px}
+.fcc-modal .mb{padding:20px;color:var(--text)}
+.fcc-modal .mb p{margin:0 0 10px;color:var(--muted)}
+.fcc-modal .mf{padding:14px 20px;border-top:1px solid var(--panel-border);display:flex;justify-content:flex-end;gap:8px}
+
+/* hint */
+.fcc-hint{margin:10px 0 0;background:#fff8e7;border:1px solid #f1be32;border-radius:10px;padding:12px 14px;font-family:ui-monospace,monospace;font-size:13px;white-space:pre-wrap;color:#5b4a00}
+[data-theme="dark"] .fcc-hint{background:#2a2410;color:#ffd970;border-color:#7a5a10}
+
+/* mobile */
+@media(max-width:1023px){
+  .fcc-body{grid-template-columns:1fr}
+  .fcc-sidebar{position:fixed;left:0;top:0;height:100vh;max-width:84vw;width:300px;z-index:60;transform:translateX(-105%);transition:transform .25s ease;border-right:1px solid rgba(255,255,255,.1)}
+  .fcc-sidebar.open{transform:translateX(0)}
+  .fcc-burger{display:inline-flex}
+  .fcc-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;backdrop-filter:blur(1px)}
+  .fcc-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg);border-bottom:1px solid var(--yellow);position:sticky;top:0;z-index:2}
+  .fcc-drawer-head .dh-title{display:flex;align-items:center;gap:8px;font-weight:800;color:#fff;font-size:15px}
+  .fcc-drawer-close{background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .fcc-drawer-close:hover{background:rgba(255,255,255,.2)}
+}
+.fcc-header .fcc-brand-text{font-size:15.5px}
+@media(max-width:560px){.fcc-stat span.lbl{display:none}.fcc-lesson-head .xptag{display:none}.fcc-brand-text small{display:none}}
+
+/* kbd */
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:4px;background:rgba(0,0,0,.25);color:#c9d1d9;font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;border:1px solid rgba(255,255,255,.15);box-shadow:0 1px 0 rgba(0,0,0,.4);line-height:1}
+[data-theme="light"] .kbd{background:#eaeef2;color:#1b1b32;border-color:#c7d2dc;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+
+/* achievements bar */
+.fcc-achbar{display:flex;align-items:center;gap:6px;padding:0 20px 12px;background:var(--panel);border-bottom:1px solid var(--panel-border);flex-wrap:wrap}
+.fcc-ach{display:inline-flex;align-items:center;gap:6px;padding:4px 9px 4px 6px;border-radius:999px;font-size:11.5px;font-weight:700;border:1px solid var(--panel-border);background:var(--panel2);color:var(--muted);transition:all .2s;position:relative}
+.fcc-ach .aem{font-size:13px;filter:grayscale(1);opacity:.5;transition:all .25s}
+.fcc-ach.unlocked{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.fcc-ach.unlocked .aem{filter:none;opacity:1}
+.fcc-ach .atip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a0a23;color:#fff;font-size:11px;font-weight:600;padding:5px 9px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.fcc-ach .atip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0a0a23}
+.fcc-ach:hover .atip{opacity:1}
+
+/* help modal list */
+.fcc-help-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.fcc-help-list li{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text)}
+.fcc-help-list .hk{display:inline-flex;gap:4px;flex:none;width:96px}
+.fcc-help-list .desc{flex:1;color:var(--muted)}
+
+/* REPL modal */
+.fcc-repl-modal{max-width:760px;width:100%;max-height:85vh;display:flex;flex-direction:column}
+.fcc-repl-modal .mh{background:var(--bg2);color:#fff;padding:14px 20px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--green)}
+.fcc-repl-modal .mh .repl-badge{margin-left:auto;font-size:11px;font-weight:600;background:rgba(126,231,135,.15);color:var(--green);padding:3px 9px;border-radius:999px;border:1px solid rgba(126,231,135,.3)}
+.fcc-repl-body{flex:1;display:flex;flex-direction:column;min-height:0;background:#010409}
+.fcc-repl-output{flex:1;overflow:auto;padding:12px 16px;min-height:280px;max-height:55vh;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.55}
+.fcc-repl-output::-webkit-scrollbar{width:10px;height:10px}
+.fcc-repl-output::-webkit-scrollbar-thumb{background:#30363d;border-radius:8px}
+.fcc-repl-output .rline{padding:2px 0;white-space:pre-wrap;word-break:break-word}
+.fcc-repl-output .rline.in{color:#c9d1d9}
+.fcc-repl-output .rline.in::before{content:'>>> ';color:var(--green);font-weight:700}
+.fcc-repl-output .rline.out{color:#c9d1d9}
+.fcc-repl-output .rline.err{color:#ff7b72}
+.fcc-repl-output .rline.sys{color:#79c0ff}
+.fcc-repl-output .rline.sys::before{content:'› ';color:#7ee787}
+.fcc-repl-output .rline.placeholder{color:#6e7681;font-style:italic}
+.fcc-repl-input-wrap{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#0d1117;border-top:1px solid var(--code-border)}
+.fcc-repl-prompt{color:var(--green);font-weight:700;font-family:ui-monospace,Menlo,monospace;font-size:13px;flex:none}
+.fcc-repl-input{flex:1;background:#010409;border:1px solid var(--code-border);color:var(--code-fg);padding:8px 12px;border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:13px;outline:none;transition:border-color .15s}
+.fcc-repl-input:focus{border-color:var(--green)}
+.fcc-repl-run{background:var(--green);color:#0a0a23;border:none;font-weight:800;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:5px}
+.fcc-repl-run:hover{filter:brightness(1.1)}
+.fcc-repl-run:disabled{opacity:.5;cursor:not-allowed}
+.fcc-repl-clear{background:rgba(255,255,255,.06);color:#c9d1d9;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.fcc-repl-clear:hover{background:rgba(255,255,255,.12)}
+
+/* cheat sheet modal */
+.fcc-cheat-modal{max-width:820px;width:100%;max-height:88vh;display:flex;flex-direction:column}
+.fcc-cheat-modal .mh{background:var(--bg2);color:#fff;padding:14px 20px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--yellow)}
+.fcc-cheat-body{overflow:auto;padding:18px 22px 6px;max-height:74vh}
+.fcc-cheat-body::-webkit-scrollbar{width:10px}
+.fcc-cheat-body::-webkit-scrollbar-thumb{background:var(--code-border);border-radius:8px}
+.fcc-cheat-section{margin-bottom:22px}
+.fcc-cheat-section h3{margin:0 0 8px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.fcc-cheat-section h3 .em{font-size:16px}
+.fcc-cheat-grid{display:grid;grid-template-columns:1fr;gap:6px}
+@media(min-width:640px){.fcc-cheat-grid{grid-template-columns:1fr 1fr}}
+.fcc-cheat-item{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:6px 0;border-bottom:1px dashed var(--panel-border)}
+.fcc-cheat-item:last-child{border-bottom:none}
+.fcc-cheat-item code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--code-bg);color:var(--code-fg);padding:3px 8px;border-radius:5px;border:1px solid var(--code-border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.fcc-cheat-item .ci-desc{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* secondary header buttons */
+.fcc-hdr-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#c9d1d9;cursor:pointer;padding:6px 10px;border-radius:8px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s,transform .08s}
+.fcc-hdr-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+.fcc-hdr-btn:active{transform:translateY(1px)}
+.fcc-hdr-btn svg{width:15px;height:15px}
+@media(max-width:560px){.fcc-hdr-btn span.lbl{display:none}}
+
+/* bookmarks */
+.fcc-bm-btn{background:transparent;border:none;cursor:pointer;padding:4px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;transition:background .12s,transform .1s;flex:none}
+.fcc-bm-btn:hover{background:rgba(241,190,50,.12);transform:scale(1.1)}
+.fcc-bm-btn svg{width:16px;height:16px;color:#8b949e;transition:color .15s}
+.fcc-bm-btn.active svg{color:var(--yellow);fill:var(--yellow)}
+.fcc-bm-filter{display:inline-flex;align-items:center;gap:5px;background:rgba(241,190,50,.1);border:1px solid rgba(241,190,50,.25);color:var(--yellow);padding:5px 10px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .12s}
+.fcc-bm-filter:hover{background:rgba(241,190,50,.18)}
+.fcc-bm-filter.active{background:var(--yellow);color:var(--yellow-fg)}
+.fcc-bm-filter svg{width:13px;height:13px}
+
+/* pystatus chip */
+.fcc-pystatus{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#8b949e;font-weight:600;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.fcc-pystatus .pdot{width:7px;height:7px;border-radius:50%;background:#6e7681}
+.fcc-pystatus.ready .pdot{background:var(--green);box-shadow:0 0 6px var(--green)}
+.fcc-pystatus.loading .pdot{background:var(--yellow);animation:fccblink 1s infinite}
+.fcc-pystatus.error .pdot{background:var(--danger)}
+@keyframes fccblink{50%{opacity:.3}}
+
+/* menu */
+.fcc-menu{position:relative}
+.fcc-menu-pop{position:absolute;top:calc(100% + 6px);right:0;background:var(--panel);border:1px solid var(--panel-border);border-radius:10px;box-shadow:var(--shadow);min-width:200px;z-index:70;overflow:hidden}
+.fcc-menu-pop button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text);padding:10px 14px;font-size:13.5px;cursor:pointer;text-align:left;transition:background .12s}
+.fcc-menu-pop button:hover{background:var(--panel2)}
+.fcc-menu-pop button.danger{color:var(--danger)}
+.fcc-menu-pop button svg{width:16px;height:16px;flex:none}
+
+/* capstone banner */
+.fcc-cap-banner{margin:0 20px 12px;padding:10px 14px;background:linear-gradient(90deg,rgba(241,190,50,.12),rgba(241,190,50,.04));border:1px solid rgba(241,190,50,.3);border-radius:10px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
+.fcc-cap-banner .cb-ico{font-size:18px}
+.fcc-cap-banner .cb-txt{font-weight:700}
+.fcc-cap-banner .cb-sub{font-weight:500;color:var(--muted);font-size:12px}
+
+/* fade animation */
+.fcc-lesson-head,.fcc-instr,.fcc-editor-col{animation:fccfade .3s ease}
+@keyframes fccfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.fcc-stat.pulse{animation:fccpulse .5s ease}
+@keyframes fccpulse{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+/* command palette */
+.fcc-palette-back{position:fixed;inset:0;background:rgba(10,10,35,.6);z-index:110;display:flex;align-items:flex-start;justify-content:center;padding:12vh 20px 20px;backdrop-filter:blur(3px)}
+.fcc-palette{background:var(--panel);border-radius:14px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden;border:1px solid var(--panel-border)}
+.fcc-palette-input-wrap{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--panel-border)}
+.fcc-palette-input-wrap svg{width:18px;height:18px;color:var(--muted);flex:none}
+.fcc-palette-input{flex:1;background:transparent;border:none;color:var(--text);font-size:16px;outline:none;font-weight:600}
+.fcc-palette-input::placeholder{color:var(--muted);font-weight:500}
+.fcc-palette-kbd{font-size:10px;color:var(--muted);font-weight:700;background:var(--panel2);padding:3px 7px;border-radius:5px;border:1px solid var(--panel-border)}
+.fcc-palette-list{max-height:340px;overflow:auto;padding:6px}
+.fcc-palette-list::-webkit-scrollbar{width:8px}
+.fcc-palette-list::-webkit-scrollbar-thumb{background:var(--panel-border);border-radius:8px}
+.fcc-palette-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:background .1s}
+.fcc-palette-item:hover,.fcc-palette-item.sel{background:var(--panel2)}
+.fcc-palette-item.sel{box-shadow:inset 0 0 0 2px var(--yellow)}
+.fcc-palette-item .pi-ico{width:28px;height:28px;flex:none;border-radius:7px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px}
+.fcc-palette-item .pi-main{flex:1;min-width:0}
+.fcc-palette-item .pi-title{font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcc-palette-item .pi-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.fcc-palette-item .pi-status{flex:none;font-size:11px;color:var(--muted)}
+.fcc-palette-item .pi-status.done{color:var(--green)}
+.fcc-palette-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+.fcc-palette-foot{padding:8px 14px;border-top:1px solid var(--panel-border);display:flex;align-items:center;gap:12px;font-size:11px;color:var(--muted)}
+.fcc-palette-foot .kbd{margin-right:3px}
+
+/* stats dashboard */
+.fcc-stats-modal{max-width:540px;width:100%}
+.fcc-stats-modal .mh{background:var(--bg2);color:#fff;padding:14px 20px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--accent)}
+.fcc-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 20px 8px}
+.fcc-stat-card{background:var(--panel2);border:1px solid var(--panel-border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.fcc-stat-card .sc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.fcc-stat-card .sc-value{font-size:24px;font-weight:800;color:var(--text);line-height:1.1;font-variant-numeric:tabular-nums}
+.fcc-stat-card .sc-sub{font-size:11.5px;color:var(--muted)}
+.fcc-stat-card.accent .sc-value{color:var(--accent)}
+.fcc-stat-card.green .sc-value{color:var(--green)}
+.fcc-stat-card.yellow .sc-value{color:var(--yellow)}
+.fcc-stat-card.red .sc-value{color:#ff7b72}
+.fcc-stats-list{padding:0 20px 14px}
+.fcc-stats-list h3{margin:6px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.fcc-stats-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--panel-border);font-size:13px}
+.fcc-stats-row:last-child{border-bottom:none}
+.fcc-stats-row .sr-l{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.fcc-stats-row .sr-r{flex:none;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* copy button */
+.fcc-copy-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#c9d1d9;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;transition:background .12s}
+.fcc-copy-btn:hover{background:rgba(255,255,255,.14)}
+.fcc-copy-btn svg{width:12px;height:12px}
+
+/* activity chart */
+.fcc-activity-chart{padding:4px 20px 14px}
+.fcc-activity-chart h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.fcc-activity-bars{display:flex;align-items:flex-end;gap:4px;height:64px;padding-bottom:18px;position:relative;border-bottom:1px solid var(--panel-border)}
+.fcc-activity-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative;cursor:default}
+.fcc-activity-bar .bar-fill{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--accent),#5aa8c9);min-height:2px;transition:height .4s cubic-bezier(.2,.8,.2,1);opacity:.85}
+.fcc-activity-bar.today .bar-fill{background:linear-gradient(180deg,var(--green),#5cb85c);opacity:1;box-shadow:0 0 8px rgba(126,231,135,.4)}
+.fcc-activity-bar:hover .bar-fill{opacity:1}
+.fcc-activity-bar .bar-tip{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#0a0a23;color:#fff;font-size:10px;font-weight:600;padding:3px 6px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .15s;white-space:nowrap;z-index:5}
+.fcc-activity-bar:hover .bar-tip{opacity:1}
+.fcc-activity-empty{font-size:12px;color:var(--muted);text-align:center;padding:12px 0}
+
+/* auto-advance toggle */
+.fcc-switch{position:relative;width:38px;height:22px;flex:none;cursor:pointer}
+.fcc-switch input{opacity:0;width:0;height:0;position:absolute}
+.fcc-switch .track{position:absolute;inset:0;background:var(--bg3);border-radius:999px;transition:background .2s}
+.fcc-switch .thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.fcc-switch input:checked ~ .track{background:var(--green)}
+.fcc-switch input:checked ~ .thumb{transform:translateX(16px)}
+
+/* onboarding modal */
+.fcc-onboard{max-width:560px;width:100%}
+.fcc-onboard .mh{background:linear-gradient(135deg,var(--bg),var(--bg2));color:#fff;padding:22px 24px;font-weight:800;font-size:18px;display:flex;flex-direction:column;gap:6px;border-bottom:2px solid var(--yellow)}
+.fcc-onboard .mh .oh-sub{font-size:12.5px;font-weight:500;color:#99c1e8}
+.fcc-onboard .ob-body{padding:20px 24px}
+.fcc-onboard .ob-step{display:flex;gap:12px;padding:8px 0;align-items:flex-start}
+.fcc-onboard .ob-step .ob-ico{width:32px;height:32px;flex:none;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--panel2);border:1px solid var(--panel-border)}
+.fcc-onboard .ob-step .ob-txt{flex:1}
+.fcc-onboard .ob-step .ob-title{font-size:13.5px;font-weight:700;color:var(--text)}
+.fcc-onboard .ob-step .ob-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.fcc-onboard .ob-tip{margin-top:12px;padding:10px 14px;background:var(--green-bg);border:1px solid var(--green);border-radius:8px;font-size:12.5px;color:var(--text)}
+.fcc-onboard .ob-tip b{color:var(--green)}
+
+/* status filter pills */
+.fcc-status-filters{display:flex;gap:5px;padding:8px 12px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+.fcc-status-pill{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#8b949e;padding:5px 6px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s;text-align:center}
+.fcc-status-pill:hover{background:rgba(255,255,255,.1);color:#c9d1d9}
+.fcc-status-pill.active{background:#7ec8e3;color:#0a0a23;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React + Babel (CDN). React 18 UMD (React 19 dropped UMD builds). -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/jsx-source" id="app-source">
+/* ===== freeCodeCamp-style интерактивный курс Python (один index.html) =====
+   Python выполняется в браузере через Pyodide (WebAssembly, CDN).
+   Подсветка синтаксиса — собственный лёгкий токенайзер.
+   Прогресс, XP, код ученика сохраняются в localStorage. */
+
+const { useCallback, useEffect, useMemo, useRef, useState } = React
+
+/* ---------------------------------------------------------- учебный план */
+const CURRICULUM = [
+  {
+    id: 'basics', title: 'Основы Python', icon: '🌱',
+    lessons: [
+      {
+        id: 'b1', title: 'Вывод текста',
+        blocks: [
+          { t: 'p', c: 'Функция print() выводит данные на экран — это первая команда, которую изучают в Python.' },
+          { t: 'code', c: 'print("Hello, World!")' },
+          { t: 'p', c: 'В скобках указывают то, что нужно вывести: строку, число или значение переменной.' },
+          { t: 'note', c: 'Строки заключаются в кавычки: "..." или \'...\'.' },
+        ],
+        starter: '# Выведи на экран строку: Hello, World!\n',
+        tests: [{ type: 'stdout', value: 'Hello, World!' }],
+        hint: 'print("Hello, World!")',
+      },
+      {
+        id: 'b2', title: 'Переменные',
+        blocks: [
+          { t: 'p', c: 'Переменная хранит значение под именем. Создаётся присваиванием:' },
+          { t: 'code', c: 'name = "Анна"\nprint(name)' },
+          { t: 'p', c: 'Имена переменных: латиница или подчёркивание, без пробелов, не начинаются с цифры. Регистр важен.' },
+        ],
+        starter: '# Создай переменную name со значением "Анна"\n# и выведи её на экран\n',
+        tests: [
+          { type: 'expr', expr: 'name == "Анна"' },
+          { type: 'stdout', value: 'Анна' },
+        ],
+        hint: 'name = "Анна"\nprint(name)',
+      },
+      {
+        id: 'b3', title: 'Числа и арифметика',
+        blocks: [
+          { t: 'p', c: 'Python умеет: + сложение, - вычитание, * умножение, / деление, ** степень, % остаток, // целочисленное деление.' },
+          { t: 'code', c: 'total = 19 + 23\nprint(total)  # 42' },
+          { t: 'note', c: 'Результат деления / — всегда число с плавающей точкой (float).' },
+        ],
+        starter: '# Вычисли 19 + 23 и сохрани результат в переменную total\n',
+        tests: [{ type: 'expr', expr: 'total == 42' }],
+        hint: 'total = 19 + 23',
+      },
+      {
+        id: 'b4', title: 'Типы данных',
+        blocks: [
+          { t: 'p', c: 'Основные типы: int (целое), float (дробное), str (строка), bool (True/False).' },
+          { t: 'code', c: 'age = 25\nprice = 9.99\nname = "Python"\nactive = True' },
+          { t: 'p', c: 'Узнать тип значения можно функцией type(): type(age) → <class \'int\'>' },
+        ],
+        starter: '# Создай переменные:\n# age = 25      (целое число)\n# price = 9.99  (дробное число)\n',
+        tests: [
+          { type: 'expr', expr: 'type(age) == int' },
+          { type: 'expr', expr: 'type(price) == float' },
+        ],
+        hint: 'age = 25\nprice = 9.99',
+      },
+      {
+        id: 'b5', title: 'Преобразование типов',
+        blocks: [
+          { t: 'p', c: 'Функции int(), float(), str(), bool() преобразуют значения из одного типа в другой.' },
+          { t: 'code', c: 's = "42"\nn = int(s)\nprint(n + 8)  # 50' },
+          { t: 'note', c: 'Нельзя напрямую сложить строку и число — сначала преобразуй.' },
+        ],
+        starter: '# Преобразуй строку "42" в число, прибавь 8 и выведи результат\n',
+        tests: [{ type: 'stdout', value: '50' }],
+        hint: 'print(int("42") + 8)',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Счётчик символов',
+      description: 'Собери программу, которая считает символы в строке и выводит результат в формате «Длина: N». Используй print() и функцию len().',
+      starter: '# Проект: выведи «Длина: 5» для строки "Hello"\ns = "Hello"\n',
+      tests: [{ type: 'stdout', value: 'Длина: 5' }],
+      hint: 'print(f"Длина: {len(s)}")',
+    },
+  },
+  {
+    id: 'strings', title: 'Строки', icon: '🔤',
+    lessons: [
+      {
+        id: 's1', title: 'Создание строк',
+        blocks: [
+          { t: 'p', c: 'Строка — последовательность символов в кавычках. Тройные кавычки позволяют делать многострочный текст.' },
+          { t: 'code', c: 's = "Python"\nmulti = """первая строка\nвторая строка"""' },
+        ],
+        starter: '# Создай переменную language со значением "Python"\n',
+        tests: [{ type: 'expr', expr: 'language == "Python"' }],
+        hint: 'language = "Python"',
+      },
+      {
+        id: 's2', title: 'Конкатенация и повторение',
+        blocks: [
+          { t: 'p', c: 'Оператор + объединяет строки, а * повторяет строку заданное число раз.' },
+          { t: 'code', c: 'greet = "Привет, " + "мир"\nsep = "-" * 10\nprint(greet)\nprint(sep)' },
+        ],
+        starter: '# Объедини "Hello, " и "Python" в переменную msg и выведи её\n',
+        tests: [{ type: 'stdout', value: 'Hello, Python' }],
+        hint: 'msg = "Hello, " + "Python"\nprint(msg)',
+      },
+      {
+        id: 's3', title: 'Индексация и срезы',
+        blocks: [
+          { t: 'p', c: 's[i] — символ по индексу (с 0). s[a:b] — срез от a до b. Отрицательные индексы отсчитываются с конца.' },
+          { t: 'code', c: 's = "Python"\nprint(s[0])    # P\nprint(s[-1])   # n\nprint(s[1:4])  # yth\nprint(s[:3])   # Pyt' },
+        ],
+        starter: '# Для строки s = "Python" выведи первые 3 символа (срез s[:3])\ns = "Python"\n',
+        tests: [{ type: 'stdout', value: 'Pyt' }],
+        hint: 'print(s[:3])',
+      },
+      {
+        id: 's4', title: 'Методы строк',
+        blocks: [
+          { t: 'p', c: 'Строки имеют много методов: upper(), lower(), strip(), replace(), split(), find(), count(), startswith().' },
+          { t: 'code', c: '"hello".upper()        # "HELLO"\n"  hi  ".strip()       # "hi"\n"a,b,c".split(",")    # [\'a\', \'b\', \'c\']' },
+        ],
+        starter: '# Преобразуй строку word = "hello" в верхний регистр и выведи результат\nword = "hello"\n',
+        tests: [{ type: 'stdout', value: 'HELLO' }],
+        hint: 'print(word.upper())',
+      },
+      {
+        id: 's5', title: 'f-строки',
+        blocks: [
+          { t: 'p', c: 'f-строки (formatted strings) вставляют значения переменных прямо в текст через фигурные скобки {}.' },
+          { t: 'code', c: 'name = "Анна"\nprint(f"Привет, {name}!")\n# Привет, Анна!' },
+        ],
+        starter: '# Создай name = "Мир" и выведи: Привет, Мир!\n# используя f-строку\n',
+        tests: [{ type: 'stdout', value: 'Привет, Мир!' }],
+        hint: 'name = "Мир"\nprint(f"Привет, {name}!")',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Форматированное приветствие',
+      description: 'Создай программу, которая формирует приветствие «Привет, <Имя>! Тебе <Возраст> лет.» из переменных name и age, используя f-строку.',
+      starter: '# Проект: приветствие\nname = "Олег"\nage = 30\n',
+      tests: [{ type: 'stdout', value: 'Привет, Олег! Тебе 30 лет.' }],
+      hint: 'print(f"Привет, {name}! Тебе {age} лет.")',
+    },
+  },
+  {
+    id: 'control', title: 'Управляющие конструкции', icon: '🔀',
+    lessons: [
+      {
+        id: 'c1', title: 'Условия if / elif / else',
+        blocks: [
+          { t: 'p', c: 'if проверяет условие. elif — «иначе если». else — все остальные случаи. Тело блока отделяется отступом (4 пробела).' },
+          { t: 'code', c: 'x = 7\nif x > 10:\n    print("большое")\nelif x > 5:\n    print("среднее")\nelse:\n    print("малое")' },
+          { t: 'note', c: 'В Python отступы — часть синтаксиса. Без них будет ошибка.' },
+        ],
+        starter: '# Дано x = 10. Если x делится на 2 — выведи "чётное", иначе "нечётное"\nx = 10\n',
+        tests: [{ type: 'stdout', value: 'чётное' }],
+        hint: 'if x % 2 == 0:\n    print("чётное")\nelse:\n    print("нечётное")',
+      },
+      {
+        id: 'c2', title: 'Логические операторы',
+        blocks: [
+          { t: 'p', c: 'and (и), or (или), not (не). Сравнения: ==, !=, <, >, <=, >=.' },
+          { t: 'code', c: 'age = 20\nif age >= 18 and age <= 65:\n    print("рабочий возраст")' },
+        ],
+        starter: '# Дано n = 15. Если n больше 10 И меньше 20 — выведи "да", иначе "нет"\nn = 15\n',
+        tests: [{ type: 'stdout', value: 'да' }],
+        hint: 'if n > 10 and n < 20:\n    print("да")\nelse:\n    print("нет")',
+      },
+      {
+        id: 'c3', title: 'Цикл while',
+        blocks: [
+          { t: 'p', c: 'while повторяет блок, пока условие истинно. Важно менять условие внутри, иначе — бесконечный цикл.' },
+          { t: 'code', c: 'i = 0\nwhile i < 3:\n    print(i)\n    i += 1\n# 0 1 2' },
+        ],
+        starter: '# Выведи числа от 1 до 5 (каждое на отдельной строке) через while\n',
+        tests: [{ type: 'stdout_exact', value: '1\n2\n3\n4\n5' }],
+        hint: 'i = 1\nwhile i <= 5:\n    print(i)\n    i += 1',
+      },
+      {
+        id: 'c4', title: 'Цикл for и range()',
+        blocks: [
+          { t: 'p', c: 'for x in последовательность: ... Функция range(n) даёт числа 0..n-1, range(a,b) — a..b-1, range(a,b,шаг).' },
+          { t: 'code', c: 'for i in range(3):\n    print(i)\n# 0 1 2' },
+        ],
+        starter: '# Выведи квадраты чисел от 1 до 5: 1, 4, 9, 16, 25 (по строкам)\n',
+        tests: [{ type: 'stdout_exact', value: '1\n4\n9\n16\n25' }],
+        hint: 'for i in range(1, 6):\n    print(i * i)',
+      },
+      {
+        id: 'c5', title: 'break и continue',
+        blocks: [
+          { t: 'p', c: 'break немедленно прерывает цикл. continue пропускает остаток тела и переходит к следующей итерации.' },
+          { t: 'code', c: 'for i in range(10):\n    if i == 5:\n        break\n    print(i)\n# 0 1 2 3 4' },
+        ],
+        starter: '# Выведи числа от 1 до 10, но пропусти 5 (используй continue)\n',
+        tests: [{ type: 'stdout_exact', value: '1\n2\n3\n4\n6\n7\n8\n9\n10' }],
+        hint: 'for i in range(1, 11):\n    if i == 5:\n        continue\n    print(i)',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Таблица умножения',
+      description: 'Выведи таблицу умножения на 3: строки «3 x 1 = 3», «3 x 2 = 6» … «3 x 5 = 15» (по одной на строку). Используй цикл for и f-строку.',
+      starter: '# Проект: таблица умножения на 3 (5 строк)\n',
+      tests: [{ type: 'stdout_exact', value: '3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15' }],
+      hint: 'for i in range(1, 6):\n    print(f"3 x {i} = {3 * i}")',
+    },
+  },
+  {
+    id: 'data', title: 'Структуры данных', icon: '📦',
+    lessons: [
+      {
+        id: 'd1', title: 'Списки',
+        blocks: [
+          { t: 'p', c: 'Список — упорядоченная изменяемая коллекция в квадратных скобках. Индексация и срезы — как у строк.' },
+          { t: 'code', c: 'nums = [10, 20, 30]\nprint(nums[0])     # 10\nprint(len(nums))  # 3' },
+        ],
+        starter: '# Создай список nums = [3, 1, 2] и выведи его длину\n',
+        tests: [
+          { type: 'expr', expr: 'len(nums) == 3' },
+          { type: 'stdout', value: '3' },
+        ],
+        hint: 'nums = [3, 1, 2]\nprint(len(nums))',
+      },
+      {
+        id: 'd2', title: 'Методы списков',
+        blocks: [
+          { t: 'p', c: 'append() добавить, insert() вставить, remove() удалить, pop() извлечь, sort() отсортировать, reverse() развернуть.' },
+          { t: 'code', c: 'a = [3, 1, 2]\na.sort()\nprint(a)  # [1, 2, 3]' },
+        ],
+        starter: '# Создай список a = [3, 1, 2], отсортируй его и выведи\n',
+        tests: [{ type: 'expr', expr: 'a == [1, 2, 3]' }],
+        hint: 'a = [3, 1, 2]\na.sort()\nprint(a)',
+      },
+      {
+        id: 'd3', title: 'Кортежи',
+        blocks: [
+          { t: 'p', c: 'Кортеж — неизменяемый список в круглых скобках. После создания его нельзя изменить.' },
+          { t: 'code', c: 't = (1, 2, 3)\nprint(t[1])  # 2' },
+        ],
+        starter: '# Создай кортеж point = (10, 20) и выведи его второй элемент\n',
+        tests: [
+          { type: 'expr', expr: 'point == (10, 20)' },
+          { type: 'stdout', value: '20' },
+        ],
+        hint: 'point = (10, 20)\nprint(point[1])',
+      },
+      {
+        id: 'd4', title: 'Словари',
+        blocks: [
+          { t: 'p', c: 'Словарь хранит пары ключ:значение. Доступ по ключу: d["a"]. Методы keys(), values(), items(). get() безопасно.' },
+          { t: 'code', c: 'd = {"name": "Анна", "age": 25}\nprint(d["name"])' },
+        ],
+        starter: '# Создай словарь person = {"name": "Олег", "age": 30}\n# и выведи имя\n',
+        tests: [
+          { type: 'expr', expr: 'person["age"] == 30' },
+          { type: 'stdout', value: 'Олег' },
+        ],
+        hint: 'person = {"name": "Олег", "age": 30}\nprint(person["name"])',
+      },
+      {
+        id: 'd5', title: 'Множества',
+        blocks: [
+          { t: 'p', c: 'Множество (set) — коллекция уникальных элементов. Методы add, remove. Операции: | объединение, & пересечение, - разность.' },
+          { t: 'code', c: 's = {1, 2, 3}\ns.add(4)\nprint(2 in s)  # True' },
+        ],
+        starter: '# Создай множество s из списка [1, 1, 2, 3, 3] и выведи его длину\n# (должно получиться 3)\n',
+        tests: [
+          { type: 'expr', expr: 'len(s) == 3' },
+          { type: 'stdout', value: '3' },
+        ],
+        hint: 's = set([1, 1, 2, 3, 3])\nprint(len(s))',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Телефонная книга',
+      description: 'Создай словарь contacts с тремя именами: «Анна»→«555-1234», «Олег»→«555-5678», «Мария»→«555-9012». Выведи номер Олега.',
+      starter: '# Проект: телефонная книга\n',
+      tests: [{ type: 'stdout', value: '555-5678' }],
+      hint: 'contacts = {"Анна": "555-1234", "Олег": "555-5678", "Мария": "555-9012"}\nprint(contacts["Олег"])',
+    },
+  },
+  {
+    id: 'functions', title: 'Функции', icon: '⚙️',
+    lessons: [
+      {
+        id: 'f1', title: 'Определение функций',
+        blocks: [
+          { t: 'p', c: 'Функция определяется через def имя(параметры): и тело с отступом. Вызывается по имени.' },
+          { t: 'code', c: 'def greet(name):\n    return f"Привет, {name}"\n\nprint(greet("Оля"))' },
+        ],
+        starter: '# Определи функцию greet() без аргументов,\n# которая возвращает строку "Привет!"\n',
+        tests: [{ type: 'expr', expr: 'greet() == "Привет!"' }],
+        hint: 'def greet():\n    return "Привет!"',
+      },
+      {
+        id: 'f2', title: 'Аргументы и параметры',
+        blocks: [
+          { t: 'p', c: 'Функция может принимать несколько аргументов. Они передаются по позиции.' },
+          { t: 'code', c: 'def add(a, b):\n    return a + b\n\nprint(add(2, 3))  # 5' },
+        ],
+        starter: '# Определи функцию add(a, b), возвращающую сумму a и b\n',
+        tests: [
+          { type: 'expr', expr: 'add(2, 3) == 5' },
+          { type: 'expr', expr: 'add(10, 20) == 30' },
+        ],
+        hint: 'def add(a, b):\n    return a + b',
+      },
+      {
+        id: 'f3', title: 'Возврат значений',
+        blocks: [
+          { t: 'p', c: 'return возвращает результат из функции. Без return функция вернёт None.' },
+          { t: 'code', c: 'def square(x):\n    return x * x\n\nprint(square(5))  # 25' },
+        ],
+        starter: '# Определи функцию square(x), возвращающую x в квадрате\n',
+        tests: [
+          { type: 'expr', expr: 'square(4) == 16' },
+          { type: 'expr', expr: 'square(5) == 25' },
+        ],
+        hint: 'def square(x):\n    return x * x',
+      },
+      {
+        id: 'f4', title: 'Значения по умолчанию',
+        blocks: [
+          { t: 'p', c: 'Параметр может иметь значение по умолчанию — тогда аргумент можно не передавать.' },
+          { t: 'code', c: 'def power(base, exp=2):\n    return base ** exp\n\nprint(power(3))      # 9\nprint(power(2, 3))  # 8' },
+        ],
+        starter: '# Определи функцию power(base, exp=2),\n# возвращающую base в степени exp\n',
+        tests: [
+          { type: 'expr', expr: 'power(3) == 9' },
+          { type: 'expr', expr: 'power(2, 3) == 8' },
+        ],
+        hint: 'def power(base, exp=2):\n    return base ** exp',
+      },
+      {
+        id: 'f5', title: 'lambda-функции',
+        blocks: [
+          { t: 'p', c: 'lambda — анонимная функция в одну строку: lambda параметры: выражение. Удобна для коротких операций.' },
+          { t: 'code', c: 'square = lambda x: x * x\nprint(square(6))  # 36' },
+        ],
+        starter: '# Создай lambda-функцию double, возвращающую x * 2\n',
+        tests: [{ type: 'expr', expr: 'double(5) == 10' }],
+        hint: 'double = lambda x: x * 2',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Калькулятор площади',
+      description: 'Напиши функцию rectangle_area(width, height), которая возвращает площадь прямоугольника (width * height). Функция должна вернуть 24 для rectangle_area(6, 4).',
+      starter: '# Проект: функция rectangle_area\n',
+      tests: [
+        { type: 'expr', expr: 'rectangle_area(6, 4) == 24' },
+        { type: 'expr', expr: 'rectangle_area(3, 7) == 21' },
+      ],
+      hint: 'def rectangle_area(width, height):\n    return width * height',
+    },
+  },
+  {
+    id: 'oop', title: 'Объектно-ориентированное программирование', icon: '🏛️',
+    lessons: [
+      {
+        id: 'o1', title: 'Классы и объекты',
+        blocks: [
+          { t: 'p', c: 'Класс — шаблон для объектов. class Имя: ... Объект создаётся вызовом класса: Имя().' },
+          { t: 'code', c: 'class Dog:\n    def bark(self):\n        return "Гав!"\n\nrex = Dog()\nprint(rex.bark())' },
+        ],
+        starter: '# Создай класс Cat с методом meow(),\n# который возвращает строку "Мяу"\n',
+        tests: [{ type: 'expr', expr: 'Cat().meow() == "Мяу"' }],
+        hint: 'class Cat:\n    def meow(self):\n        return "Мяу"',
+      },
+      {
+        id: 'o2', title: 'Конструктор __init__',
+        blocks: [
+          { t: 'p', c: 'Метод __init__ вызывается при создании объекта. self — ссылка на сам объект. Атрибуты хранят данные.' },
+          { t: 'code', c: 'class Person:\n    def __init__(self, name):\n        self.name = name\n\np = Person("Аня")\nprint(p.name)  # Аня' },
+        ],
+        starter: '# Создай класс Person с методом __init__(self, name),\n# который сохраняет name в self.name\n',
+        tests: [{ type: 'expr', expr: 'Person("Аня").name == "Аня"' }],
+        hint: 'class Person:\n    def __init__(self, name):\n        self.name = name',
+      },
+      {
+        id: 'o3', title: 'Методы и состояние',
+        blocks: [
+          { t: 'p', c: 'Методы класса работают с данными объекта через self. Могут изменять атрибуты.' },
+          { t: 'code', c: 'class Counter:\n    def __init__(self):\n        self.count = 0\n    def inc(self):\n        self.count += 1' },
+        ],
+        starter: '# Создай класс Counter: __init__ задаёт self.count = 0,\n# метод inc() увеличивает count на 1\n',
+        tests: [
+          { type: 'expr', expr: '(lambda c: (c.inc(), c.inc()) and c.count == 2)(Counter())' },
+        ],
+        hint: 'class Counter:\n    def __init__(self):\n        self.count = 0\n    def inc(self):\n        self.count += 1',
+      },
+      {
+        id: 'o4', title: 'Наследование',
+        blocks: [
+          { t: 'p', c: 'Класс может наследовать от другого: class Sub(Base). Подкласс получает методы родителя и может их переопределять.' },
+          { t: 'code', c: 'class Animal:\n    def speak(self):\n        return "звук"\n\nclass Dog(Animal):\n    def speak(self):\n        return "Гав"' },
+        ],
+        starter: '# Класс Animal с методом speak() -> "звук"\n# Класс Dog(Animal), переопределяющий speak() -> "Гав"\n',
+        tests: [{ type: 'expr', expr: 'Dog().speak() == "Гав"' }],
+        hint: 'class Animal:\n    def speak(self):\n        return "звук"\n\nclass Dog(Animal):\n    def speak(self):\n        return "Гав"',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Класс BankAccount',
+      description: 'Создай класс BankAccount с __init__(self, owner) (self.owner = owner, self.balance = 0) и методом deposit(self, amount), который увеличивает balance. Экземпляр должен корректно принимать депозит.',
+      starter: '# Проект: класс BankAccount\n',
+      tests: [
+        { type: 'expr', expr: 'BankAccount("Анна").owner == "Анна"' },
+        { type: 'expr', expr: '(lambda a: (a.deposit(100), a.balance)[1])(BankAccount("Олег")) == 100' },
+      ],
+      hint: 'class BankAccount:\n    def __init__(self, owner):\n        self.owner = owner\n        self.balance = 0\n    def deposit(self, amount):\n        self.balance += amount',
+    },
+  },
+  {
+    id: 'advanced', title: 'Продвинутые темы', icon: '🚀',
+    lessons: [
+      {
+        id: 'a1', title: 'Обработка исключений',
+        blocks: [
+          { t: 'p', c: 'try/except ловят ошибки. Можно указать тип исключения. finally выполняется всегда.' },
+          { t: 'code', c: 'try:\n    x = 1 / 0\nexcept ZeroDivisionError:\n    print("на ноль делить нельзя")' },
+        ],
+        starter: '# Оберни вызов risky() в try/except.\n# При ошибке выведи: перехвачено\ndef risky():\n    return 1 / 0\n',
+        tests: [{ type: 'stdout', value: 'перехвачено' }],
+        hint: 'try:\n    risky()\nexcept ZeroDivisionError:\n    print("перехвачено")',
+      },
+      {
+        id: 'a2', title: 'List comprehensions',
+        blocks: [
+          { t: 'p', c: 'Генератор списка в одну строку: [выражение for x in последовательность if условие].' },
+          { t: 'code', c: 'squares = [x * x for x in range(5)]\nprint(squares)  # [0, 1, 4, 9, 16]' },
+        ],
+        starter: '# Создай список squares = [x**2 for x in range(1, 6)]\n# Должно получиться [1, 4, 9, 16, 25]\n',
+        tests: [{ type: 'expr', expr: 'squares == [1, 4, 9, 16, 25]' }],
+        hint: 'squares = [x**2 for x in range(1, 6)]',
+      },
+      {
+        id: 'a3', title: 'Фильтрация и map()',
+        blocks: [
+          { t: 'p', c: 'filter(func, iter) оставляет элементы, где func истинно. map(func, iter) преобразует каждый элемент.' },
+          { t: 'code', c: 'evens = [x for x in range(10) if x % 2 == 0]\n# [0, 2, 4, 6, 8]' },
+        ],
+        starter: '# Создай список evens = [x for x in range(10) if x % 2 == 0]\n',
+        tests: [{ type: 'expr', expr: 'evens == [0, 2, 4, 6, 8]' }],
+        hint: 'evens = [x for x in range(10) if x % 2 == 0]',
+      },
+      {
+        id: 'a4', title: 'Генераторы (yield)',
+        blocks: [
+          { t: 'p', c: 'Функция с yield возвращает генератор — ленивую последовательность. Значения вычисляются по мере запроса.' },
+          { t: 'code', c: 'def count_up(n):\n    i = 0\n    while i < n:\n        yield i\n        i += 1\n\nprint(list(count_up(3)))  # [0, 1, 2]' },
+        ],
+        starter: '# Определи функцию gen(), которая yield-ит числа 1, 2, 3\n',
+        tests: [{ type: 'expr', expr: 'list(gen()) == [1, 2, 3]' }],
+        hint: 'def gen():\n    yield 1\n    yield 2\n    yield 3',
+      },
+      {
+        id: 'a5', title: 'Декораторы',
+        blocks: [
+          { t: 'p', c: 'Декоратор — функция, оборачивающая другую. Записывается через @имя над def. Может изменять результат.' },
+          { t: 'code', c: 'def shout(func):\n    def wrapper():\n        return func().upper()\n    return wrapper\n\n@shout\ndef hi():\n    return "hi"\n\nprint(hi())  # HI' },
+        ],
+        starter: '# Создай декоратор upper, который делает результат\n# функции заглавными буквами. Примени к greet().\n# greet() должно вернуть "HELLO"\n',
+        tests: [{ type: 'expr', expr: 'greet() == "HELLO"' }],
+        hint: 'def upper(func):\n    def wrapper():\n        return func().upper()\n    return wrapper\n\n@upper\ndef greet():\n    return "hello"',
+      },
+    ],
+    capstone: {
+      title: 'Проект: Фильтрация чётных чисел',
+      description: 'Используя list comprehension, создай список evens = [x for x in range(20) if x % 2 == 0] — все чётные числа от 0 до 18. Список должен содержать 10 элементов.',
+      starter: '# Проект: фильтрация чётных чисел\n',
+      tests: [
+        { type: 'expr', expr: 'len(evens) == 10' },
+        { type: 'expr', expr: 'evens == [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]' },
+      ],
+      hint: 'evens = [x for x in range(20) if x % 2 == 0]',
+    },
+  },
+]
+
+/* ------------------------------------------------------- подсветка синтаксиса */
+const PY_KEYWORDS = new Set([
+  'def', 'return', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and',
+  'or', 'import', 'from', 'as', 'class', 'pass', 'break', 'continue', 'True',
+  'False', 'None', 'lambda', 'with', 'try', 'except', 'finally', 'raise',
+  'yield', 'global', 'nonlocal', 'del', 'is', 'assert', 'async', 'await',
+])
+const PY_BUILTINS = new Set([
+  'print', 'len', 'range', 'str', 'int', 'float', 'list', 'dict', 'set',
+  'tuple', 'bool', 'input', 'type', 'enumerate', 'zip', 'map', 'filter',
+  'sum', 'min', 'max', 'abs', 'sorted', 'reversed', 'open', 'format',
+  'isinstance', 'getattr', 'setattr', 'hasattr', 'super',
+])
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+const TOKEN_RE = /(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?''')|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b\d+\.?\d*(?:e[+-]?\d+)?\b)|(\b[A-Za-z_]\w*\b)/g
+function highlightPython(code) {
+  let out = ''
+  let last = 0
+  let m
+  TOKEN_RE.lastIndex = 0
+  while ((m = TOKEN_RE.exec(code))) {
+    out += escapeHtml(code.slice(last, m.index))
+    const [full, comment, tripleStr, str, num, ident] = m
+    if (comment) out += '<span class="t-com">' + escapeHtml(comment) + '</span>'
+    else if (tripleStr) out += '<span class="t-str">' + escapeHtml(tripleStr) + '</span>'
+    else if (str) out += '<span class="t-str">' + escapeHtml(str) + '</span>'
+    else if (num) out += '<span class="t-num">' + escapeHtml(num) + '</span>'
+    else if (ident) {
+      if (PY_KEYWORDS.has(ident)) out += '<span class="t-kw">' + ident + '</span>'
+      else if (PY_BUILTINS.has(ident)) out += '<span class="t-bi">' + ident + '</span>'
+      else out += ident
+    }
+    last = m.index + full.length
+  }
+  out += escapeHtml(code.slice(last))
+  return out
+}
+
+/* ----------------------------------------------------------- компоненты */
+const ALL_LESSONS = CURRICULUM.flatMap((m, mi) => {
+  const difficulty = mi < 2 ? 'Лёгкий' : mi < 5 ? 'Средний' : 'Продвинутый'
+  const lessons = m.lessons.map((l, i) => {
+    const estMin = Math.max(3, Math.min(12, l.blocks.length * 2 + l.tests.length))
+    return {
+      ...l, moduleId: m.id, moduleTitle: m.title, icon: m.icon,
+      indexInModule: i, moduleIndex: mi, difficulty, estMinutes: estMin, isCapstone: false,
+    }
+  })
+  if (m.capstone) {
+    lessons.push({
+      id: m.id + '_capstone', title: m.capstone.title,
+      blocks: [{ t: 'p', c: m.capstone.description }],
+      starter: m.capstone.starter, tests: m.capstone.tests, hint: m.capstone.hint,
+      moduleId: m.id, moduleTitle: m.title, icon: m.icon,
+      indexInModule: m.lessons.length, moduleIndex: mi, difficulty, estMinutes: 10, isCapstone: true,
+    })
+  }
+  return lessons
+})
+const TOTAL_LESSONS = ALL_LESSONS.length
+
+const LS = {
+  code: 'fcc_py_code_v1', done: 'fcc_py_done_v1', xp: 'fcc_py_xp_v1',
+  theme: 'fcc_py_theme_v1', last: 'fcc_py_last_v1', streak: 'fcc_py_streak_v1',
+  bookmarks: 'fcc_py_bookmarks_v1', times: 'fcc_py_times_v1',
+  autoAdvance: 'fcc_py_autoadvance_v1', activity: 'fcc_py_activity_v1',
+  onboarded: 'fcc_py_onboarded_v1',
+}
+function loadObj(key, fallback) {
+  try { const v = window.localStorage.getItem(key); return v ? JSON.parse(v) : fallback }
+  catch { return fallback }
+}
+function saveObj(key, val) { try { window.localStorage.setItem(key, JSON.stringify(val)) } catch {} }
+
+const PYODIDE_VERSION = 'v0.26.2'
+const PYODIDE_BASE = 'https://cdn.jsdelivr.net/pyodide/' + PYODIDE_VERSION + '/full'
+const RUN_TIMEOUT_MS = 6000
+
+const WORKER_SRC = `
+let pyodide = null;
+let ready = false;
+let replNs = null;
+async function init(onMsg) {
+  onMsg({ type: 'status', status: 'loading' });
+  try {
+    importScripts('${PYODIDE_BASE}/pyodide.js');
+    pyodide = await self.loadPyodide({ indexURL: '${PYODIDE_BASE}/' });
+    ready = true;
+    replNs = pyodide.globals.get('dict')();
+    onMsg({ type: 'status', status: 'ready' });
+  } catch (e) {
+    onMsg({ type: 'status', status: 'error', error: String(e && e.message || e) });
+  }
+}
+function runJob(job) {
+  let out = '';
+  pyodide.setStdout({ batched: function (s) { out += s; } });
+  pyodide.setStderr({ batched: function (s) { out += s; } });
+  var ns = job.mode === 'repl' ? replNs : pyodide.globals.get('dict')();
+  let runError = null;
+  try { pyodide.runPython(job.code, { globals: ns }); }
+  catch (e) { runError = String(e && e.message || e); }
+  let testResults = null;
+  if (job.tests && job.tests.length) {
+    testResults = job.tests.map(function (t) {
+      var label = t.name || (t.type === 'expr' ? t.expr : t.value);
+      var ok = false;
+      try {
+        if (t.type === 'stdout') ok = out.indexOf(t.value) !== -1;
+        else if (t.type === 'stdout_exact') ok = out.replace(/\\s+$/, '') === String(t.value).replace(/\\s+$/, '');
+        else if (t.type === 'expr') ok = !!pyodide.runPython('bool(' + t.expr + ')', { globals: ns });
+      } catch (e) { ok = false; }
+      return { name: String(label), pass: ok };
+    });
+  }
+  return { type: 'result', ok: !runError, stdout: out, error: runError, testResults: testResults };
+}
+self.onmessage = function (ev) {
+  const data = ev.data;
+  if (data.type === 'run') {
+    if (!ready) { self.postMessage({ type: 'error', error: 'Python ещё не загружен' }); return; }
+    try { const res = runJob(data); res.id = data.id; self.postMessage(res); }
+    catch (e) { self.postMessage({ type: 'error', id: data.id, error: String(e && e.message || e) }); }
+  } else if (data.type === 'repl-reset') {
+    try { replNs = pyodide ? pyodide.globals.get('dict')() : null; } catch (e) {}
+  }
+};
+init(self.postMessage);
+`
+
+function Home() {
+  const [theme, setTheme] = useState('dark')
+  const [currentId, setCurrentId] = useState(ALL_LESSONS[0].id)
+  const [done, setDone] = useState({})
+  const [savedCode, setSavedCode] = useState({})
+  const [xp, setXp] = useState(0)
+  const [openModules, setOpenModules] = useState({})
+  const [query, setQuery] = useState('')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showHint, setShowHint] = useState(false)
+  const [tab, setTab] = useState('console')
+  const [consoleLines, setConsoleLines] = useState([])
+  const [testResults, setTestResults] = useState([])
+  const [isRunning, setIsRunning] = useState(false)
+  const [pyState, setPyState] = useState('idle')
+  const [toast, setToast] = useState(null)
+  const [confetti, setConfetti] = useState(false)
+  const [certOpen, setCertOpen] = useState(false)
+  const [helpOpen, setHelpOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [xpPulse, setXpPulse] = useState(false)
+  const [replOpen, setReplOpen] = useState(false)
+  const [cheatOpen, setCheatOpen] = useState(false)
+  const [replInput, setReplInput] = useState('')
+  const [replHistory, setReplHistory] = useState([])
+  const [replRunning, setReplRunning] = useState(false)
+  const [streak, setStreak] = useState({ count: 0, lastDay: '' })
+  const [bookmarks, setBookmarks] = useState({})
+  const [bookmarkFilter, setBookmarkFilter] = useState(false)
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const [paletteQuery, setPaletteQuery] = useState('')
+  const [paletteIndex, setPaletteIndex] = useState(0)
+  const [lessonSeconds, setLessonSeconds] = useState(0)
+  const [times, setTimes] = useState({})
+  const [statsOpen, setStatsOpen] = useState(false)
+  const [autoAdvance, setAutoAdvance] = useState(false)
+  const [activity, setActivity] = useState({})
+  const [onboardOpen, setOnboardOpen] = useState(false)
+
+  const workerRef = useRef(null)
+  const workerStatusRef = useRef('idle')
+  const pendingRef = useRef(new Map())
+  const jobIdRef = useRef(0)
+  const taRef = useRef(null)
+  const hlRef = useRef(null)
+  const gutterRef = useRef(null)
+  const consoleRef = useRef(null)
+  const fileInputRef = useRef(null)
+  const replOutputRef = useRef(null)
+
+  const current = useMemo(() => ALL_LESSONS.find((l) => l.id === currentId) ?? ALL_LESSONS[0], [currentId])
+  const code = savedCode[current.id] ?? current.starter
+  const highlighted = useMemo(() => highlightPython(code) + '\n', [code])
+  const lineCount = useMemo(() => code.split('\n').length, [code])
+  const currentIndex = ALL_LESSONS.findIndex((l) => l.id === current.id)
+
+  const pushConsole = useCallback((type, text) => {
+    setConsoleLines((prev) => [...prev, { type, text }])
+  }, [])
+
+  /* init from localStorage */
+  useEffect(() => {
+    setTheme(loadObj(LS.theme, 'dark'))
+    setDone(loadObj(LS.done, {}))
+    setSavedCode(loadObj(LS.code, {}))
+    setXp(loadObj(LS.xp, 0))
+    setStreak(loadObj(LS.streak, { count: 0, lastDay: '' }))
+    setBookmarks(loadObj(LS.bookmarks, {}))
+    setTimes(loadObj(LS.times, {}))
+    setAutoAdvance(loadObj(LS.autoAdvance, false))
+    setActivity(loadObj(LS.activity, {}))
+    if (!loadObj(LS.onboarded, false)) setTimeout(() => setOnboardOpen(true), 600)
+    const last = loadObj(LS.last, ALL_LESSONS[0].id)
+    if (ALL_LESSONS.some((l) => l.id === last)) setCurrentId(last)
+  }, [])
+
+  /* Web Worker init */
+  useEffect(() => {
+    const blob = new Blob([WORKER_SRC], { type: 'application/javascript' })
+    const url = URL.createObjectURL(blob)
+    const w = new Worker(url)
+    workerRef.current = w
+    const handleMsg = (ev) => {
+      const data = ev.data
+      if (data.type === 'status') {
+        const st = data.status || 'idle'
+        workerStatusRef.current = st
+        setPyState(st)
+        if (st === 'loading') pushConsole('info', 'Загружаем окружение Python (Pyodide ~10 МБ) в фоне…')
+        else if (st === 'ready') pushConsole('ok', 'Готово: Python ' + PYODIDE_VERSION + ' запущен в фоновом потоке.')
+        else if (st === 'error') pushConsole('err', 'Ошибка загрузки Python: ' + (data.error || ''))
+        return
+      }
+      if (data.type === 'result' || data.type === 'error') {
+        const id = data.id
+        const job = id != null ? pendingRef.current.get(id) : undefined
+        if (!job) return
+        clearTimeout(job.timer)
+        pendingRef.current.delete(id)
+        if (data.type === 'error') job.resolve({ ok: false, stdout: '', error: data.error || 'Неизвестная ошибка' })
+        else job.resolve({ ok: !!data.ok, stdout: data.stdout || '', error: data.error, testResults: data.testResults || undefined })
+      }
+    }
+    w.onmessage = handleMsg
+    return () => { w.terminate(); URL.revokeObjectURL(url); workerRef.current = null }
+  }, [])
+
+  useEffect(() => {
+    const root = document.documentElement
+    root.setAttribute('data-theme', theme)
+    saveObj(LS.theme, theme)
+  }, [theme])
+  useEffect(() => saveObj(LS.code, savedCode), [savedCode])
+  useEffect(() => saveObj(LS.done, done), [done])
+  useEffect(() => saveObj(LS.xp, xp), [xp])
+  useEffect(() => saveObj(LS.last, currentId), [currentId])
+  useEffect(() => saveObj(LS.streak, streak), [streak])
+  useEffect(() => saveObj(LS.bookmarks, bookmarks), [bookmarks])
+  useEffect(() => saveObj(LS.times, times), [times])
+  useEffect(() => saveObj(LS.autoAdvance, autoAdvance), [autoAdvance])
+  useEffect(() => saveObj(LS.activity, activity), [activity])
+
+  const toggleBookmark = useCallback((id) => {
+    setBookmarks((prev) => { const n = { ...prev }; if (n[id]) delete n[id]; else n[id] = true; return n })
+  }, [])
+
+  const bumpStreak = useCallback(() => {
+    setStreak((prev) => {
+      const today = new Date().toISOString().slice(0, 10)
+      if (prev.lastDay === today) return prev
+      const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+      const nextCount = prev.lastDay === yesterday ? prev.count + 1 : 1
+      const next = { count: nextCount, lastDay: today }
+      if (nextCount > 1) setTimeout(() => showToast('success', '🔥 Серия ' + nextCount + ' дней! Так держать.'), 1100)
+      return next
+    })
+  }, [])
+
+  useEffect(() => {
+    setOpenModules((prev) => {
+      const next = { ...prev }
+      const mod = CURRICULUM.find((m) => m.id === current.moduleId)
+      if (mod) next[mod.id] = true
+      return next
+    })
+  }, [currentId])
+
+  useEffect(() => { if (consoleRef.current) consoleRef.current.scrollTop = consoleRef.current.scrollHeight }, [consoleLines])
+
+  useEffect(() => {
+    return () => {
+      setLessonSeconds((elapsed) => {
+        if (elapsed > 0) setTimes((prev) => ({ ...prev, [currentId]: (prev[currentId] || 0) + elapsed }))
+        return 0
+      })
+    }
+  }, [currentId])
+  useEffect(() => {
+    setLessonSeconds(0)
+    const t = setInterval(() => setLessonSeconds((s) => s + 1), 1000)
+    return () => clearInterval(t)
+  }, [currentId])
+
+  useEffect(() => {
+    if (replOutputRef.current) replOutputRef.current.scrollTop = replOutputRef.current.scrollHeight
+  }, [replHistory])
+
+  /* global hotkeys */
+  useEffect(() => {
+    const navigateTo = (id) => { setCurrentId(id); setSidebarOpen(false); setTestResults([]); setConsoleLines([]); setShowHint(false); setTab('console') }
+    const onKey = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setPaletteOpen((s) => !s); setPaletteQuery(''); setPaletteIndex(0); return }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'j') { e.preventDefault(); setTheme((t) => (t === 'dark' ? 'light' : 'dark')); return }
+      if (e.key === 'Escape') {
+        if (paletteOpen) setPaletteOpen(false)
+        else if (statsOpen) setStatsOpen(false)
+        else if (onboardOpen) setOnboardOpen(false)
+        else if (replOpen) setReplOpen(false)
+        else if (cheatOpen) setCheatOpen(false)
+        else if (certOpen) setCertOpen(false)
+        else if (helpOpen) setHelpOpen(false)
+        else if (menuOpen) setMenuOpen(false)
+        else if (sidebarOpen) setSidebarOpen(false)
+        else if (showHint) setShowHint(false)
+      }
+      const inField = document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')
+      if (e.altKey && e.key === 'ArrowLeft' && !inField) { e.preventDefault(); if (currentIndex > 0) navigateTo(ALL_LESSONS[currentIndex - 1].id) }
+      if (e.altKey && e.key === 'ArrowRight' && !inField) { e.preventDefault(); if (currentIndex < TOTAL_LESSONS - 1) navigateTo(ALL_LESSONS[currentIndex + 1].id) }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [certOpen, helpOpen, menuOpen, sidebarOpen, showHint, currentIndex, replOpen, cheatOpen, paletteOpen, statsOpen, onboardOpen])
+
+  const syncScroll = useCallback(() => {
+    const ta = taRef.current
+    if (!ta) return
+    if (hlRef.current) { hlRef.current.scrollTop = ta.scrollTop; hlRef.current.scrollLeft = ta.scrollLeft }
+    if (gutterRef.current) gutterRef.current.style.transform = 'translateY(' + (-ta.scrollTop) + 'px)'
+  }, [])
+
+  const setCode = useCallback((val) => setSavedCode((prev) => ({ ...prev, [current.id]: val })), [current.id])
+  const onCodeChange = (e) => setCode(e.target.value)
+  const onKeyDown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); runCheck(true); return }
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const ta = e.currentTarget
+      const s = ta.selectionStart, en = ta.selectionEnd
+      const newVal = code.slice(0, s) + '    ' + code.slice(en)
+      setCode(newVal)
+      requestAnimationFrame(() => { ta.selectionStart = ta.selectionEnd = s + 4 })
+    }
+  }
+
+  const runInWorker = useCallback((code, tests, mode) => {
+    return new Promise((resolve) => {
+      const w = workerRef.current
+      if (!w) { resolve({ ok: false, stdout: '', error: 'Окружение не инициализировано' }); return }
+      const id = ++jobIdRef.current
+      const timer = setTimeout(() => {
+        pendingRef.current.delete(id)
+        const old = workerRef.current
+        if (old) old.terminate()
+        try {
+          const blob = new Blob([WORKER_SRC], { type: 'application/javascript' })
+          const url = URL.createObjectURL(blob)
+          const nw = new Worker(url)
+          workerRef.current = nw
+          workerStatusRef.current = 'loading'
+          setPyState('loading')
+          nw.onmessage = (ev) => {
+            const data = ev.data
+            if (data.type === 'status') { workerStatusRef.current = data.status || 'idle'; setPyState(data.status || 'idle'); return }
+            if (data.type === 'result' || data.type === 'error') {
+              const jid = data.id; const job = jid != null ? pendingRef.current.get(jid) : undefined
+              if (!job) return
+              clearTimeout(job.timer); pendingRef.current.delete(jid)
+              if (data.type === 'error') job.resolve({ ok: false, stdout: '', error: data.error || '' })
+              else job.resolve({ ok: !!data.ok, stdout: data.stdout || '', error: data.error, testResults: data.testResults || undefined })
+            }
+          }
+          setTimeout(() => URL.revokeObjectURL(url), 5000)
+        } catch { workerRef.current = null }
+        resolve({ ok: false, stdout: '', error: '⏱ Превышено время выполнения (' + Math.round(RUN_TIMEOUT_MS / 1000) + ' с). Возможно, в коде бесконечный цикл. Worker перезапущен.' })
+      }, RUN_TIMEOUT_MS)
+      pendingRef.current.set(id, { code, tests, resolve, timer })
+      w.postMessage({ type: 'run', id, code, tests, mode: mode || 'lesson' })
+    })
+  }, [])
+
+  async function runCheck(check) {
+    if (isRunning) return
+    setIsRunning(true)
+    if (!check) setConsoleLines([])
+    pushConsole('sys', check ? '› Проверка решения…' : '› Запуск кода…')
+    if (workerStatusRef.current !== 'ready') pushConsole('info', 'Python ещё загружается, подожди…')
+    const tests = check
+      ? current.tests.map((t) => ({ type: t.type, value: 'value' in t ? t.value : undefined, expr: 'expr' in t ? t.expr : undefined, name: t.name }))
+      : []
+    const res = await runInWorker(code, tests)
+    if (res.error) pushConsole('err', res.error)
+    if (res.stdout.trim()) pushConsole('out', res.stdout.replace(/\n$/, ''))
+    else if (!res.error && !check) pushConsole('info', '(программа завершилась без вывода)')
+    if (check && res.testResults) {
+      setTestResults(res.testResults); setTab('tests')
+      const allPass = res.testResults.every((r) => r.pass)
+      if (allPass && res.ok) markDone(current.id)
+      else if (!res.ok && res.error && !res.testResults.length) showToast('error', 'В коде ошибка выполнения')
+      else showToast('error', 'Некоторые тесты не пройдены')
+    }
+    setIsRunning(false)
+  }
+
+  function markDone(id) {
+    setDone((prev) => {
+      if (prev[id]) { showToast('success', 'Решение верное!'); return prev }
+      const next = { ...prev, [id]: true }
+      setXp((x) => x + 100)
+      setXpPulse(true); setTimeout(() => setXpPulse(false), 600)
+      showToast('success', 'Задание выполнено! +100 XP')
+      fireConfetti()
+      bumpStreak()
+      const today = new Date().toISOString().slice(0, 10)
+      setActivity((a) => ({ ...a, [today]: (a[today] || 0) + 1 }))
+      const completedCount = Object.keys(next).length
+      const ach = computeAchievements(completedCount)
+      const newlyUnlocked = ach.find((a) => !a.unlocked_before && a.unlocked)
+      if (newlyUnlocked) setTimeout(() => showToast('success', '🏆 Достижение: ' + newlyUnlocked.title), 900)
+      if (completedCount >= TOTAL_LESSONS) setTimeout(() => setCertOpen(true), 700)
+      const idx = ALL_LESSONS.findIndex((l) => l.id === id)
+      if (autoAdvance && idx < TOTAL_LESSONS - 1) {
+        setTimeout(() => { showToast('info', '→ Переход к следующему уроку…'); goLesson(ALL_LESSONS[idx + 1].id) }, 2500)
+      }
+      return next
+    })
+  }
+
+  const achievements = useMemo(() => {
+    const set = new Set(Object.keys(done).filter((k) => done[k]))
+    return [
+      { id: 'first', em: '🎯', title: 'Первые шаги', desc: 'Заверши 1 урок', unlocked: set.size >= 1 },
+      { id: 'five', em: '⭐', title: 'Новичок', desc: 'Заверши 5 уроков', unlocked: set.size >= 5 },
+      { id: 'ten', em: '🔥', title: 'На уверенном пути', desc: 'Заверши 10 уроков', unlocked: set.size >= 10 },
+      { id: 'half', em: '⚡', title: 'Половина пути', desc: 'Заверши 17 уроков', unlocked: set.size >= 17 },
+      { id: 'all', em: '🏆', title: 'Мастер Python', desc: 'Пройди весь курс', unlocked: set.size >= TOTAL_LESSONS },
+    ]
+  }, [done])
+
+  function computeAchievements(count) {
+    const oldCount = Object.keys(done).filter((k) => done[k]).length
+    const defs = [
+      { id: 'first', count: 1, title: 'Первые шаги' },
+      { id: 'five', count: 5, title: 'Новичок' },
+      { id: 'ten', count: 10, title: 'На уверенном пути' },
+      { id: 'half', count: 17, title: 'Половина пути' },
+      { id: 'all', count: TOTAL_LESSONS, title: 'Мастер Python' },
+    ]
+    return defs.map((d) => ({ ...d, unlocked: count >= d.count, unlocked_before: oldCount >= d.count }))
+  }
+
+  function showToast(kind, msg) { setToast({ kind, msg }); setTimeout(() => setToast(null), 3200) }
+  function fireConfetti() { setConfetti(true); setTimeout(() => setConfetti(false), 2600) }
+  const dismissOnboard = () => { saveObj(LS.onboarded, true); setOnboardOpen(false) }
+
+  const goLesson = (id) => { setCurrentId(id); setSidebarOpen(false); setTestResults([]); setConsoleLines([]); setShowHint(false); setTab('console') }
+  const goPrev = () => { if (currentIndex > 0) goLesson(ALL_LESSONS[currentIndex - 1].id) }
+  const goNext = () => { if (currentIndex < TOTAL_LESSONS - 1) goLesson(ALL_LESSONS[currentIndex + 1].id) }
+  const resetCode = () => { setSavedCode((prev) => { const n = { ...prev }; delete n[current.id]; return n }); setTestResults([]); setConsoleLines([]) }
+  const copyCode = useCallback(() => { try { navigator.clipboard && navigator.clipboard.writeText(code); showToast('success', 'Код скопирован') } catch { showToast('error', 'Не удалось скопировать') } }, [code])
+  const resetAllProgress = () => { setDone({}); setXp(0); setSavedCode({}); setStreak({ count: 0, lastDay: '' }); setBookmarks({}); setTimes({}); setActivity({}); setTestResults([]); setConsoleLines([]); setShowHint(false); setMenuOpen(false); goLesson(ALL_LESSONS[0].id); showToast('success', 'Весь прогресс сброшен') }
+  const exportProgress = () => {
+    const data = { done, xp, streak, savedCode, bookmarks, times, activity, lastLesson: currentId, exportedAt: new Date().toISOString(), version: 1 }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a'); a.href = url; a.download = 'python-course-progress.json'; a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    setMenuOpen(false); showToast('success', 'Прогресс экспортирован')
+  }
+  const importProgress = () => { if (fileInputRef.current) fileInputRef.current.click() }
+  const onImportFile = (e) => {
+    const file = e.target.files && e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(String(reader.result))
+        if (data.done) setDone(data.done)
+        if (typeof data.xp === 'number') setXp(data.xp)
+        if (data.streak) setStreak(data.streak)
+        if (data.savedCode) setSavedCode(data.savedCode)
+        if (data.bookmarks) setBookmarks(data.bookmarks)
+        if (data.times) setTimes(data.times)
+        if (data.activity) setActivity(data.activity)
+        if (data.lastLesson && ALL_LESSONS.some((l) => l.id === data.lastLesson)) setCurrentId(data.lastLesson)
+        setMenuOpen(false); showToast('success', 'Прогресс импортирован')
+      } catch { showToast('error', 'Не удалось прочитать файл') }
+    }
+    reader.readAsText(file); e.target.value = ''
+  }
+
+  async function runRepl() {
+    const src = replInput.trim()
+    if (!src || replRunning) return
+    setReplRunning(true)
+    setReplHistory((h) => [...h, { type: 'in', text: src }])
+    setReplInput('')
+    if (workerStatusRef.current !== 'ready') {
+      setReplHistory((h) => [...h, { type: 'sys', text: 'Python ещё загружается, подожди и попробуй снова…' }])
+      setReplRunning(false); return
+    }
+    const wrapped = '__r = None\ntry:\n    __r = eval(' + JSON.stringify(src) + ')\n    if __r is not None:\n        print(repr(__r))\nexcept SyntaxError:\n    try:\n        exec(' + JSON.stringify(src) + ')\n    except Exception as __e:\n        print(__e)\nexcept Exception as __e:\n    print(__e)\n'
+    const res = await runInWorker(wrapped, [], 'repl')
+    if (res.error) setReplHistory((h) => [...h, { type: 'err', text: res.error || '' }])
+    if (res.stdout.trim()) setReplHistory((h) => [...h, { type: 'out', text: res.stdout.replace(/\n$/, '') }])
+    else if (!res.error) setReplHistory((h) => [...h, { type: 'out', text: '' }])
+    setReplRunning(false)
+  }
+  const onReplKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); runRepl() } }
+  const clearRepl = () => { setReplHistory([]); if (workerRef.current) workerRef.current.postMessage({ type: 'repl-reset' }) }
+  const toggleModule = (id) => setOpenModules((p) => ({ ...p, [id]: !p[id] }))
+
+  const completedCount = Object.keys(done).filter((k) => done[k]).length
+  const progressPct = Math.round((completedCount / TOTAL_LESSONS) * 100)
+  const filteredCurriculum = useMemo(() => {
+    if (!query.trim()) return CURRICULUM
+    const q = query.toLowerCase()
+    return CURRICULUM.map((m) => ({ ...m, lessons: m.lessons.filter((l) => l.title.toLowerCase().includes(q)) })).filter((m) => m.lessons.length > 0)
+  }, [query])
+  const paletteResults = useMemo(() => {
+    const q = paletteQuery.trim().toLowerCase()
+    if (!q) return ALL_LESSONS
+    return ALL_LESSONS.filter((l) => l.title.toLowerCase().includes(q) || l.moduleTitle.toLowerCase().includes(q))
+  }, [paletteQuery])
+  const allTestsPassed = testResults.length > 0 && testResults.every((r) => r.pass)
+
+  const totalSeconds = Object.values(times).reduce((a, b) => a + b, 0) + lessonSeconds
+  const capstoneDone = ALL_LESSONS.filter((l) => l.isCapstone && done[l.id]).length
+  const bookmarksCount = Object.keys(bookmarks).filter((k) => bookmarks[k]).length
+  const avgPerLesson = completedCount > 0 ? Math.round(totalSeconds / completedCount) : 0
+  function fmtTime(sec) {
+    if (sec < 60) return sec + ' с'
+    const m = Math.floor(sec / 60); const s = sec % 60
+    if (m < 60) return m + ' мин ' + (s > 0 ? s + ' с' : '')
+    const h = Math.floor(m / 60); return h + ' ч ' + (m % 60) + ' мин'
+  }
+  const activityData = useMemo(() => {
+    const days = []; const now = new Date()
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(now); d.setDate(now.getDate() - i)
+      const dateStr = d.toISOString().slice(0, 10)
+      days.push({ date: dateStr, label: d.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' }), count: activity[dateStr] || 0 })
+    }
+    return days
+  }, [activity])
+  const maxActivity = Math.max(1, ...activityData.map((d) => d.count))
+
+  const renderBlock = (b, i) => {
+    switch (b.t) {
+      case 'p': return <p key={i}>{b.c}</p>
+      case 'h': return <h2 key={i}>{b.c}</h2>
+      case 'note': return <div className="note" key={i}>{b.c}</div>
+      case 'ul': return <ul key={i}>{b.items.map((it, j) => <li key={j}>{it}</li>)}</ul>
+      case 'code': return <pre className="example" key={i}><code dangerouslySetInnerHTML={{ __html: highlightPython(b.c) }} /></pre>
+      default: return null
+    }
+  }
+
+  const FlameLogo = () => (
+    <svg className="fcc-flame" viewBox="0 0 32 32" aria-hidden="true">
+      <defs>
+        <linearGradient id="fl" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffcf4d" />
+          <stop offset="0.5" stopColor="#f1be32" />
+          <stop offset="1" stopColor="#e07b00" />
+        </linearGradient>
+      </defs>
+      <path fill="url(#fl)" d="M16 2c1 4-1.5 6-3 8s-2 4 0 6c-2 0-4-1.5-4-4.5C6 17 4 19 4 22a10 10 0 0 0 20 0c0-5-3-7-5-10-2-3-2-6-3-10z" />
+      <path fill="#fff" opacity="0.25" d="M16 12c1 2 0 4-1.5 5.5S13 21 14.5 22.5C12 22 10 20 10 17.5 10 15 13 14 16 12z" />
+    </svg>
+  )
+
+  return (
+    <div className="fcc-shell">
+      <header className="fcc-header">
+        <div className="fcc-header-inner">
+          <button className="fcc-icon-btn fcc-burger" aria-label="Меню" onClick={() => setSidebarOpen((s) => !s)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+          </button>
+          <a className="fcc-brand" onClick={(e) => { e.preventDefault(); goLesson(ALL_LESSONS[0].id) }} href="#">
+            <FlameLogo />
+            <span className="fcc-brand-text">freeCodeCamp<small>Python · Полный курс</small></span>
+          </a>
+          <div className="fcc-header-spacer" />
+          <button className="fcc-hdr-btn" onClick={() => setReplOpen(true)} title="Интерактивная консоль Python (REPL)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M6 9l3 3-3 3M12 15h5" /></svg>
+            <span className="lbl">REPL</span>
+          </button>
+          <button className="fcc-hdr-btn" onClick={() => setCheatOpen(true)} title="Шпаргалка по Python">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h12a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V4z" /><path d="M8 8h6M8 12h6" /></svg>
+            <span className="lbl">Шпаргалка</span>
+          </button>
+          <div className={'fcc-stat' + (xpPulse ? ' pulse' : '')} title="Опыт">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f1be32" strokeWidth="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z" fill="#f1be32" /></svg>
+            <span className="lbl">{xp} XP</span>
+          </div>
+          <div className="fcc-stat" title="Пройдено уроков">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7ee787" strokeWidth="2"><path d="M20 6L9 17l-5-5" /></svg>
+            <span className="lbl">{completedCount}/{TOTAL_LESSONS}</span>
+          </div>
+          <div className="fcc-stat" title="Серия дней подряд">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ff7b72" strokeWidth="2"><path d="M12 2c1 4-1.5 6-3 8s-2 4 0 6c-2 0-4-1.5-4-4.5C2 14 4 16 4 19a8 8 0 0 0 16 0c0-5-3-7-5-10-2-3-2-6-3-10z" fill="#ff7b72" fillOpacity="0.7" /></svg>
+            <span className="lbl">🔥 {streak.count}</span>
+          </div>
+          <button className="fcc-icon-btn" title="Горячие клавиши" onClick={() => setHelpOpen(true)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M6 10h0M10 10h0M14 10h0M18 10h0M7 14h10" /></svg>
+          </button>
+          <button className="fcc-icon-btn" title="Сменить тему (Ctrl+J)" onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}>
+            {theme === 'dark' ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" /></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+            )}
+          </button>
+          <div className="fcc-menu">
+            <button className="fcc-icon-btn" title="Меню" onClick={() => setMenuOpen((s) => !s)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="5" r="1.5" fill="currentColor" /><circle cx="12" cy="12" r="1.5" fill="currentColor" /><circle cx="12" cy="19" r="1.5" fill="currentColor" /></svg>
+            </button>
+            {menuOpen && (
+              <>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 69 }} onClick={() => setMenuOpen(false)} />
+                <div className="fcc-menu-pop" style={{ zIndex: 70 }}>
+                  <button onClick={() => { setReplOpen(true); setMenuOpen(false) }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M6 9l3 3-3 3M12 15h5" /></svg>Python REPL</button>
+                  <button onClick={() => { setCheatOpen(true); setMenuOpen(false) }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h12a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V4z" /><path d="M8 8h6M8 12h6" /></svg>Шпаргалка</button>
+                  <button onClick={() => { setCertOpen(true); setMenuOpen(false) }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z" /><path d="M8.5 13l-2 8 5.5-3 5.5 3-2-8" /></svg>Сертификат</button>
+                  <button onClick={() => { setStatsOpen(true); setMenuOpen(false) }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18M7 14l3-3 4 4 5-6" /></svg>Статистика</button>
+                  <button onClick={() => { setHelpOpen(true); setMenuOpen(false) }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M9.5 9a2.5 2.5 0 0 1 4.5 1.5c0 1.5-2 2-2 3M12 17h0" /></svg>Горячие клавиши</button>
+                  <button onClick={() => { setOnboardOpen(true); setMenuOpen(false) }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M12 16v-4M12 8h0" /></svg>Показать онбординг</button>
+                  <button onClick={exportProgress}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>Экспорт прогресса</button>
+                  <button onClick={importProgress}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" /></svg>Импорт прогресса</button>
+                  <button className="danger" onClick={resetAllProgress}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>Сбросить прогресс</button>
+                </div>
+              </>
+            )}
+          </div>
+          <button className="fcc-donate" onClick={() => setCertOpen(true)}>Сертификат</button>
+        </div>
+        <div className="fcc-subbar">
+          <div className="fcc-subbar-inner">
+            <span className="fcc-crumb"><b>Учебная программа</b> › <b>Python</b> › {current.moduleTitle} › {current.title}</span>
+            <div className="fcc-progress-pill">
+              <span style={{ fontWeight: 700 }}>{progressPct}%</span>
+              <span className="bar"><span style={{ width: progressPct + '%' }} /></span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="fcc-body">
+        {sidebarOpen && <div className="fcc-backdrop" onClick={() => setSidebarOpen(false)} />}
+        <aside className={'fcc-sidebar' + (sidebarOpen ? ' open' : '')}>
+          <div className="fcc-drawer-head">
+            <span className="dh-title"><FlameLogo />Меню курса</span>
+            <button className="fcc-drawer-close" aria-label="Закрыть меню" onClick={() => setSidebarOpen(false)}>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+            </button>
+          </div>
+          <div className="fcc-side-search">
+            <svg className="s-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+            <input placeholder="Поиск по урокам…" value={query} onChange={(e) => setQuery(e.target.value)} />
+            <button className={'fcc-bm-filter' + (bookmarkFilter ? ' active' : '')} onClick={() => setBookmarkFilter((s) => !s)} title="Показать только закладки" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', padding: '4px 8px' }}>
+              <svg viewBox="0 0 24 24" fill={bookmarkFilter ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+            </button>
+          </div>
+          <div className="fcc-status-filters">
+            {['all', 'todo', 'done'].map((s) => (
+              <button key={s} className={'fcc-status-pill' + (statusFilter === s ? ' active' : '')} onClick={() => setStatusFilter(s)}>
+                {s === 'all' ? 'Все' : s === 'todo' ? 'Не пройдено' : 'Пройдено'}
+              </button>
+            ))}
+          </div>
+          <div className="fcc-side-scroll">
+            {filteredCurriculum.map((m) => {
+              const allModuleItems = m.capstone
+                ? [...m.lessons, { id: m.id + '_capstone', title: m.capstone.title, isCapstone: true }]
+                : m.lessons
+              const mDone = allModuleItems.filter((l) => done[l.id]).length
+              const mTotal = allModuleItems.length
+              const mComplete = mDone === mTotal && mTotal > 0
+              const open = query.trim() ? true : !!openModules[m.id]
+              let visibleLessons = allModuleItems
+              if (bookmarkFilter) visibleLessons = visibleLessons.filter((l) => bookmarks[l.id])
+              if (statusFilter === 'todo') visibleLessons = visibleLessons.filter((l) => !done[l.id])
+              else if (statusFilter === 'done') visibleLessons = visibleLessons.filter((l) => done[l.id])
+              if ((bookmarkFilter || statusFilter !== 'all') && visibleLessons.length === 0) return null
+              return (
+                <div key={m.id} className={'fcc-mod' + (open ? ' open' : '') + (mComplete ? ' complete' : '')} style={{ position: 'relative' }}>
+                  {mComplete && (
+                    <span className="fcc-mod-badge" aria-label="Модуль завершён" title="Модуль завершён">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M20 6L9 17l-5-5" /></svg>
+                    </span>
+                  )}
+                  <div className="fcc-mod-title" onClick={() => toggleModule(m.id)} role="button" tabIndex={0} title={m.title + ' · ' + mDone + '/' + mTotal + ' пройдено' + (mComplete ? ' · ✓ завершён' : '')}>
+                    <span className="ico">{m.icon}</span>
+                    <span className="mtxt">{m.title}</span>
+                    <span className="cnt">{mDone}/{mTotal}</span>
+                    <svg className="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
+                  </div>
+                  <div className="fcc-mod-progress" aria-hidden="true">
+                    <span style={{ width: Math.round((mDone / mTotal) * 100) + '%' }} />
+                  </div>
+                  <div className="fcc-lessons">
+                    {visibleLessons.map((l, i) => (
+                      <div
+                        key={l.id}
+                        className={'fcc-lesson' + (l.id === current.id ? ' active' : '') + (done[l.id] ? ' done' : '') + (('isCapstone' in l && l.isCapstone) ? ' capstone' : '')}
+                        onClick={() => goLesson(l.id)} role="button" tabIndex={0}
+                        title={l.title + ' · ' + m.title + (done[l.id] ? ' · ✓ пройден' : '')}
+                      >
+                        <span className="check" aria-hidden="true">✓</span>
+                        {('isCapstone' in l && l.isCapstone) ? <span className="cap-ico" aria-hidden="true">🏆</span> : <span className="num">{i + 1}.</span>}
+                        <span className="ltitle">{l.title}</span>
+                        {bookmarks[l.id] && (
+                          <svg className="lm-bm" viewBox="0 0 24 24" width="12" height="12" fill="var(--yellow)" style={{ flex: 'none', marginLeft: 'auto' }}>
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                          </svg>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+            {filteredCurriculum.length === 0 && <div style={{ padding: '16px', color: '#8b949e', fontSize: 13 }}>Ничего не найдено.</div>}
+          </div>
+        </aside>
+
+        <main className="fcc-main">
+          <div className="fcc-lesson-head">
+            <div className="lbadge">{current.icon}</div>
+            <div>
+              <h1>{current.title}</h1>
+              <div className="sub">{current.moduleTitle} · Урок {current.indexInModule + 1} · Задание {currentIndex + 1} из {TOTAL_LESSONS}</div>
+              <div className="meta-tags">
+                <span className={'meta-tag diff-' + (current.difficulty === 'Лёгкий' ? 'easy' : current.difficulty === 'Средний' ? 'mid' : 'hard')}>{current.difficulty}</span>
+                <span className="meta-tag time">
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                  ~{current.estMinutes} мин
+                </span>
+                <span className="fcc-timer" title="Время на текущем уроке">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                  <span className="t-num">{Math.floor(lessonSeconds / 60)}:{String(lessonSeconds % 60).padStart(2, '0')}</span>
+                </span>
+              </div>
+            </div>
+            <div className="head-actions">
+              <button className={'fcc-bm-btn' + (bookmarks[current.id] ? ' active' : '')} onClick={() => toggleBookmark(current.id)} title={bookmarks[current.id] ? 'Убрать закладку' : 'Добавить в закладки'} aria-label="Закладка">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+              </button>
+              <div className="xptag">+100 XP</div>
+            </div>
+          </div>
+
+          {current.isCapstone && (
+            <div className="fcc-cap-banner">
+              <span className="cb-ico">🏆</span>
+              <div>
+                <div className="cb-txt">Проект-задание модуля</div>
+                <div className="cb-sub">Закрепи пройденное — реши мини-проект без пошаговых подсказок</div>
+              </div>
+            </div>
+          )}
+
+          <div className="fcc-achbar" aria-label="Достижения">
+            {achievements.map((a) => (
+              <span key={a.id} className={'fcc-ach' + (a.unlocked ? ' unlocked' : '')} tabIndex={0}>
+                <span className="aem" aria-hidden="true">{a.em}</span>
+                <span>{a.title}</span>
+                <span className="atip">{a.desc}{a.unlocked ? ' · получено' : ''}</span>
+              </span>
+            ))}
+          </div>
+
+          <div className="fcc-grid">
+            <div className="fcc-col">
+              <div className="fcc-instr">
+                {current.blocks.map((b, i) => renderBlock(b, i))}
+                <div className="fcc-task">
+                  <h3>Задание</h3>
+                  <ol>
+                    <li>Прочитай описание выше.</li>
+                    <li>Допиши код в редакторе справа.</li>
+                    <li>Нажми «Запустить», чтобы увидеть вывод.</li>
+                    <li>Нажми «Проверить», чтобы пройти тесты.</li>
+                  </ol>
+                  {current.hint && (
+                    <>
+                      <button className="fcc-btn ghost" style={{ marginTop: 10 }} onClick={() => setShowHint((s) => !s)}>
+                        {showHint ? 'Скрыть подсказку' : 'Показать подсказку'}
+                      </button>
+                      {showHint && <div className="fcc-hint">{current.hint}</div>}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="fcc-tests">
+                <h3>Тесты · {testResults.length || current.tests.length}</h3>
+                {(testResults.length ? testResults : current.tests.map((t) => ({ name: t.name || (t.type === 'expr' ? t.expr : t.value), pass: false }))).map((r, i) => (
+                  <div key={i} className={'fcc-test' + (testResults.length ? (r.pass ? ' pass' : ' fail') : '')}>
+                    <span className="dot">✓</span>
+                    <span className="label">Должно выполняться: <code>{r.name}</code></span>
+                  </div>
+                ))}
+                {testResults.length > 0 && testResults.every((r) => r.pass) && (
+                  <div style={{ color: 'var(--green)', fontWeight: 700, marginTop: 8, fontSize: 14 }}>✓ Все тесты пройдены!</div>
+                )}
+              </div>
+
+              <div className="fcc-lesson-nav">
+                <button className="fcc-btn" onClick={goPrev} disabled={currentIndex === 0}>← Назад</button>
+                <label className="fcc-switch" title="Авто-переход к следующему уроку после выполнения">
+                  <input type="checkbox" checked={autoAdvance} onChange={(e) => setAutoAdvance(e.target.checked)} />
+                  <span className="track" /><span className="thumb" />
+                </label>
+                <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>Авто-переход</span>
+                <div className="spacer" />
+                <button className="fcc-btn" onClick={goNext} disabled={currentIndex === TOTAL_LESSONS - 1}>Далее →</button>
+              </div>
+            </div>
+
+            <div className={'fcc-col fcc-editor-col' + (allTestsPassed ? ' success' : '')}>
+              <div className="fcc-editor-bar">
+                <div className="tabs">
+                  <button className={'fcc-tab' + (tab === 'console' ? ' active' : '')} onClick={() => setTab('console')}>Консоль</button>
+                  <button className={'fcc-tab' + (tab === 'tests' ? ' active' : '')} onClick={() => setTab('tests')}>Тесты {testResults.length ? '(' + testResults.filter((r) => r.pass).length + '/' + testResults.length + ')' : ''}</button>
+                </div>
+                <span className={'fcc-pystatus' + (pyState === 'ready' ? ' ready' : pyState === 'loading' ? ' loading' : pyState === 'error' ? ' error' : '')} title="Статус окружения Python">
+                  <span className="pdot" />
+                  {pyState === 'ready' ? 'Python готов' : pyState === 'loading' ? 'Загрузка…' : pyState === 'error' ? 'Ошибка' : 'Python не загружен'}
+                </span>
+                <div className="spacer" />
+                <button className="fcc-copy-btn" onClick={copyCode} title="Копировать код">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg>
+                  Копировать
+                </button>
+                <button className="fcc-btn ghost" onClick={resetCode} title="Сбросить код задания">Сбросить</button>
+                <button className="fcc-btn run" onClick={() => runCheck(false)} disabled={isRunning} title="Запустить код (Ctrl+Enter)">
+                  {isRunning && pyState === 'loading' ? 'Загрузка…' : '▶ Запустить'}<span className="kbd" style={{ marginLeft: 6 }}>⌘↵</span>
+                </button>
+                <button className="fcc-btn check" onClick={() => runCheck(true)} disabled={isRunning} title="Проверить тесты (Ctrl+Enter)">✓ Проверить</button>
+              </div>
+
+              <div className="fcc-editor">
+                <div className="fcc-gutter" ref={gutterRef}>
+                  {Array.from({ length: lineCount }, (_, i) => <div className="ln" key={i}>{i + 1}</div>)}
+                </div>
+                <div className="fcc-editor-area">
+                  <pre className="fcc-hl" ref={hlRef} aria-hidden="true"><code dangerouslySetInnerHTML={{ __html: highlighted }} /></pre>
+                  <textarea ref={taRef} className="fcc-ta" value={code} spellCheck={false} autoCapitalize="off" autoCorrect="off" onChange={onCodeChange} onScroll={syncScroll} onKeyDown={onKeyDown} aria-label="Редактор кода Python" />
+                </div>
+              </div>
+
+              <div className="fcc-console" ref={consoleRef} style={{ display: tab === 'console' ? 'block' : 'none' }}>
+                {consoleLines.length === 0 && (
+                  <div className="fcc-console-empty">
+                    <svg className="ce-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M6 9l3 3-3 3M12 15h5" /></svg>
+                    <div style={{ fontWeight: 700, color: '#8b949e' }}>Консоль пуста</div>
+                    <div>Нажми «Запустить», чтобы выполнить код. Python работает прямо в браузере.</div>
+                    <div className="ce-kbd">
+                      <span className="kbd">Ctrl</span><span style={{ color: '#6e7681' }}>+</span><span className="kbd">Enter</span>
+                      <span style={{ color: '#6e7681', marginLeft: 6 }}>— быстрый запуск</span>
+                    </div>
+                  </div>
+                )}
+                {consoleLines.map((l, i) => (
+                  <div key={i} className={'cline ' + l.type}>
+                    {(l.type === 'sys' || l.type === 'info') ? <span className="prompt">› </span> : null}
+                    {l.text}
+                  </div>
+                ))}
+              </div>
+
+              {tab === 'tests' && (
+                <div className="fcc-console" style={{ display: 'block', paddingTop: 8 }}>
+                  {testResults.length === 0 ? (
+                    <div className="cline info">Нажми «Проверить», чтобы запустить тесты.</div>
+                  ) : (
+                    testResults.map((r, i) => (
+                      <div key={i} className={'cline ' + (r.pass ? 'ok' : 'err')}>{r.pass ? '✓ ' : '✗ '}{r.name}</div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <footer className="fcc-footer">
+        <div className="fcc-footer-inner">
+          <span>© freeCodeCamp-style · Учебный клон</span>
+          <span className="grow" />
+          <a href="https://www.python.org" target="_blank" rel="noreferrer">Документация Python</a>
+          <a href="https://pyodide.org" target="_blank" rel="noreferrer">Pyodide</a>
+          <span>Python работает локально в браузере (WASM)</span>
+        </div>
+      </footer>
+
+      {toast && (
+        <div className="fcc-toast-wrap">
+          <div className={'fcc-toast ' + toast.kind}>
+            <span className="em">{toast.kind === 'success' ? '🎉' : toast.kind === 'info' ? 'ℹ️' : '⚠️'}</span>
+            <span>{toast.msg}</span>
+          </div>
+        </div>
+      )}
+
+      {confetti && (
+        <div className="fcc-confetti">
+          {Array.from({ length: 80 }).map((_, i) => {
+            const left = Math.random() * 100
+            const bg = ['#f1be32', '#7ee787', '#7ec8e3', '#ff7b72', '#d2a8ff'][i % 5]
+            const dur = 1.5 + Math.random() * 1.5
+            const delay = Math.random() * 0.6
+            return <span key={i} style={{ left: left + 'vw', background: bg, animationDuration: dur + 's', animationDelay: delay + 's' }} />
+          })}
+        </div>
+      )}
+
+      {certOpen && (
+        <div className="fcc-modal-back" onClick={() => setCertOpen(false)}>
+          <div className="fcc-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="mh"><FlameLogo />Сертификат о прохождении</div>
+            <div className="mb">
+              <p>Поздравляем! Ты прошёл все {TOTAL_LESSONS} уроков курса Python и набрал <b>{xp} XP</b>.</p>
+              <p>Это учебный клон freeCodeCamp. Настоящий сертификат freeCodeCamp.org выдаётся после прохождения официальных проектов.</p>
+              <p style={{ fontSize: 13 }}>Прогресс: {completedCount}/{TOTAL_LESSONS} · {progressPct}%</p>
+            </div>
+            <div className="mf">
+              <button className="fcc-btn ghost" onClick={() => setCertOpen(false)}>Закрыть</button>
+              <button className="fcc-btn check" onClick={() => setCertOpen(false)}>Продолжить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {helpOpen && (
+        <div className="fcc-modal-back" onClick={() => setHelpOpen(false)}>
+          <div className="fcc-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="mh">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#f1be32" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M6 10h0M10 10h0M14 10h0M18 10h0M7 14h10" /></svg>
+              Горячие клавиши и подсказки
+            </div>
+            <div className="mb">
+              <ul className="fcc-help-list">
+                <li><span className="hk"><span className="kbd">Ctrl</span><span className="kbd">K</span></span><span className="desc">Командная палитра — быстрый переход к любому уроку</span></li>
+                <li><span className="hk"><span className="kbd">Ctrl</span><span className="kbd">J</span></span><span className="desc">Переключить тёмную/светлую тему</span></li>
+                <li><span className="hk"><span className="kbd">Ctrl</span><span className="kbd">↵</span></span><span className="desc">Запустить код или проверить тесты (в редакторе)</span></li>
+                <li><span className="hk"><span className="kbd">Tab</span></span><span className="desc">Добавить отступ (4 пробела)</span></li>
+                <li><span className="hk"><span className="kbd">←</span><span className="kbd">→</span></span><span className="desc">Кнопки «Назад / Далее» переключают уроки</span></li>
+                <li><span className="hk">🔍</span><span className="desc">Поиск в сайдбаре фильтрует уроки по названию</span></li>
+                <li><span className="hk">🏆</span><span className="desc">Выполняй уроки, чтобы открывать достижения и зарабатывать XP</span></li>
+                <li><span className="hk">⌂</span><span className="desc">Весь прогресс сохраняется автоматически в браузере (localStorage)</span></li>
+              </ul>
+            </div>
+            <div className="mf"><button className="fcc-btn check" onClick={() => setHelpOpen(false)}>Понятно</button></div>
+          </div>
+        </div>
+      )}
+
+      {replOpen && (
+        <div className="fcc-modal-back" onClick={() => setReplOpen(false)}>
+          <div className="fcc-modal fcc-repl-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="mh">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#7ee787" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M6 9l3 3-3 3M12 15h5" /></svg>
+              Python REPL — интерактивная консоль
+              <span className="repl-badge">{pyState === 'ready' ? '● Python готов' : pyState === 'loading' ? '● загрузка…' : '● ожидание'}</span>
+            </div>
+            <div className="fcc-repl-body">
+              <div className="fcc-repl-output" ref={replOutputRef}>
+                {replHistory.length === 0 && (
+                  <div className="rline placeholder">Вводи команды Python и нажимай Enter. Переменные сохраняются между запусками. Попробуй: 2 + 2, print("hi"), [x*x for x in range(5)]</div>
+                )}
+                {replHistory.map((l, i) => <div key={i} className={'rline ' + l.type}>{l.text}</div>)}
+                {replRunning && <div className="rline sys">выполняется…</div>}
+              </div>
+              <div className="fcc-repl-input-wrap">
+                <span className="fcc-repl-prompt">{'>>>'}</span>
+                <input className="fcc-repl-input" value={replInput} onChange={(e) => setReplInput(e.target.value)} onKeyDown={onReplKey} placeholder="print('Привет'), 2+2, [1,2,3]…" spellCheck={false} autoCapitalize="off" autoCorrect="off" aria-label="Ввод команды Python" />
+                <button className="fcc-repl-clear" onClick={clearRepl} title="Очистить консоль">Очистить</button>
+                <button className="fcc-repl-run" onClick={runRepl} disabled={replRunning || !replInput.trim()}>▶ Выполнить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cheatOpen && (
+        <div className="fcc-modal-back" onClick={() => setCheatOpen(false)}>
+          <div className="fcc-modal fcc-cheat-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="mh">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#f1be32" strokeWidth="2"><path d="M4 4h12a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V4z" /><path d="M8 8h6M8 12h6" /></svg>
+              Шпаргалка по Python
+            </div>
+            <div className="fcc-cheat-body"><CheatSheet /></div>
+            <div className="mf"><button className="fcc-btn check" onClick={() => setCheatOpen(false)}>Закрыть</button></div>
+          </div>
+        </div>
+      )}
+
+      <input ref={fileInputRef} type="file" accept="application/json,.json" style={{ display: 'none' }} onChange={onImportFile} />
+
+      {paletteOpen && (
+        <div className="fcc-palette-back" onClick={() => setPaletteOpen(false)}>
+          <div className="fcc-palette" onClick={(e) => e.stopPropagation()}>
+            <div className="fcc-palette-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+              <input className="fcc-palette-input" placeholder="Перейти к уроку…" value={paletteQuery} autoFocus onChange={(e) => { setPaletteQuery(e.target.value); setPaletteIndex(0) }}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowDown') { e.preventDefault(); setPaletteIndex((i) => Math.min(i + 1, paletteResults.length - 1)) }
+                  else if (e.key === 'ArrowUp') { e.preventDefault(); setPaletteIndex((i) => Math.max(i - 1, 0)) }
+                  else if (e.key === 'Enter') { e.preventDefault(); const t = paletteResults[paletteIndex]; if (t) { goLesson(t.id); setPaletteOpen(false) } }
+                }} />
+              <span className="fcc-palette-kbd">ESC</span>
+            </div>
+            <div className="fcc-palette-list">
+              {paletteResults.length === 0 && <div className="fcc-palette-empty">Ничего не найдено</div>}
+              {paletteResults.slice(0, 30).map((l, i) => (
+                <div key={l.id} className={'fcc-palette-item' + (i === paletteIndex ? ' sel' : '')} onMouseEnter={() => setPaletteIndex(i)} onClick={() => { goLesson(l.id); setPaletteOpen(false) }}>
+                  <span className="pi-ico">{l.icon}</span>
+                  <span className="pi-main">
+                    <span className="pi-title">{l.title}</span>
+                    <span className="pi-sub">{l.moduleTitle} · {l.difficulty} · ~{l.estMinutes} мин</span>
+                  </span>
+                  <span className={'pi-status' + (done[l.id] ? ' done' : '')}>{done[l.id] ? '✓ пройден' : (currentIndex === ALL_LESSONS.findIndex((x) => x.id === l.id) ? '● текущий' : '')}</span>
+                </div>
+              ))}
+            </div>
+            <div className="fcc-palette-foot">
+              <span><span className="kbd">↑</span><span className="kbd">↓</span> навигация</span>
+              <span><span className="kbd">↵</span> открыть</span>
+              <span><span className="kbd">ESC</span> закрыть</span>
+              <span style={{ marginLeft: 'auto' }}>{paletteResults.length} уроков</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {statsOpen && (
+        <div className="fcc-modal-back" onClick={() => setStatsOpen(false)}>
+          <div className="fcc-modal fcc-stats-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="mh">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#7ec8e3" strokeWidth="2"><path d="M3 3v18h18M7 14l3-3 4 4 5-6" /></svg>
+              Статистика обучения
+            </div>
+            <div className="fcc-stats-grid">
+              <div className="fcc-stat-card yellow"><span className="sc-label">Опыт (XP)</span><span className="sc-value">{xp}</span><span className="sc-sub">{completedCount} из {TOTAL_LESSONS} уроков</span></div>
+              <div className="fcc-stat-card green"><span className="sc-label">Прогресс</span><span className="sc-value">{progressPct}%</span><span className="sc-sub">{completedCount}/{TOTAL_LESSONS} пройдено</span></div>
+              <div className="fcc-stat-card accent"><span className="sc-label">Серия дней</span><span className="sc-value">{streak.count} 🔥</span><span className="sc-sub">{streak.lastDay ? 'последний: ' + streak.lastDay : 'начни сегодня'}</span></div>
+              <div className="fcc-stat-card red"><span className="sc-label">Время в обучении</span><span className="sc-value">{fmtTime(totalSeconds)}</span><span className="sc-sub">~{fmtTime(avgPerLesson)} на урок</span></div>
+            </div>
+            <div className="fcc-stats-list">
+              <h3>Дополнительно</h3>
+              <div className="fcc-stats-row"><span className="sr-l">🏆 Capstone-проекты выполнено</span><span className="sr-r">{capstoneDone} / 7</span></div>
+              <div className="fcc-stats-row"><span className="sr-l">🔖 Закладок</span><span className="sr-r">{bookmarksCount}</span></div>
+              <div className="fcc-stats-row"><span className="sr-l">🎯 Достижений разблокировано</span><span className="sr-r">{achievements.filter((a) => a.unlocked).length} / {achievements.length}</span></div>
+              <div className="fcc-stats-row"><span className="sr-l">⏱ Текущий урок</span><span className="sr-r">{Math.floor(lessonSeconds / 60)}:{String(lessonSeconds % 60).padStart(2, '0')}</span></div>
+            </div>
+            <div className="fcc-activity-chart">
+              <h3>Активность за 14 дней</h3>
+              {activityData.every((d) => d.count === 0) ? (
+                <div className="fcc-activity-empty">Пока нет активности — реши урок, чтобы заполнить график</div>
+              ) : (
+                <div className="fcc-activity-bars">
+                  {activityData.map((d, i) => (
+                    <div key={d.date} className={'fcc-activity-bar' + (i === activityData.length - 1 ? ' today' : '')} title={d.date}>
+                      <span className="bar-tip">{d.count} уроков · {d.date}</span>
+                      <div className="bar-fill" style={{ height: Math.max(2, (d.count / maxActivity) * 100) + '%' }} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="mf"><button className="fcc-btn check" onClick={() => setStatsOpen(false)}>Закрыть</button></div>
+          </div>
+        </div>
+      )}
+
+      {onboardOpen && (
+        <div className="fcc-modal-back" onClick={dismissOnboard}>
+          <div className="fcc-modal fcc-onboard" onClick={(e) => e.stopPropagation()}>
+            <div className="mh">Добро пожаловать в курс Python! 🐍<span className="oh-sub">{TOTAL_LESSONS} уроков · 7 модулей · реальное выполнение Python в браузере</span></div>
+            <div className="ob-body">
+              <div className="ob-step"><span className="ob-ico">📖</span><span className="ob-txt"><div className="ob-title">Читай теорию</div><div className="ob-desc">Каждый урок начинается с объяснения и примера кода</div></span></div>
+              <div className="ob-step"><span className="ob-ico">✏️</span><span className="ob-txt"><div className="ob-title">Допиши код в редакторе</div><div className="ob-desc">Редактор с подсветкой синтаксиса. Tab — отступ, Ctrl+Enter — запуск</div></span></div>
+              <div className="ob-step"><span className="ob-ico">▶</span><span className="ob-txt"><div className="ob-title">Запусти и проверь</div><div className="ob-desc">«Запустить» — увидеть вывод, «Проверить» — пройти тесты и получить XP</div></span></div>
+              <div className="ob-step"><span className="ob-ico">⌘K</span><span className="ob-txt"><div className="ob-title">Командная палитра</div><div className="ob-desc">Быстрый переход к любому уроку — нажми Ctrl/Cmd+K</div></span></div>
+              <div className="ob-tip">💡 <b>Совет:</b> включи «Авто-переход» внизу урока, чтобы после выполнения автоматически переходить к следующему.</div>
+            </div>
+            <div className="mf"><button className="fcc-btn check" onClick={dismissOnboard}>Начать обучение →</button></div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* шпаргалка по Python */
+function CheatSheet() {
+  const sections = [
+    { em: '🖨️', title: 'Ввод / вывод', items: [['print(x)', 'вывести значение на экран'], ['print(a, b)', 'вывести несколько значений через пробел'], ['input("→ ")', 'прочитать строку с клавиатуры'], ['f"{x}"', 'f-строка: вставить значение x в текст']] },
+    { em: '🔢', title: 'Типы и преобразование', items: [['int("42")', 'строка → целое число'], ['float("3.14")', 'строка → дробное число'], ['str(42)', 'число → строка'], ['type(x)', 'узнать тип значения x']] },
+    { em: '➗', title: 'Арифметика', items: [['a + b', 'сложение'], ['a // b', 'целочисленное деление'], ['a % b', 'остаток от деления'], ['a ** b', 'возведение в степень']] },
+    { em: '🔀', title: 'Условия', items: [['if x > 0:', 'если условие истинно'], ['elif x == 0:', 'иначе если'], ['else:', 'во всех остальных случаях'], ['and / or / not', 'логические И / ИЛИ / НЕ']] },
+    { em: '🔁', title: 'Циклы', items: [['for i in range(n):', 'повторить n раз (i = 0..n-1)'], ['for x in список:', 'перебрать элементы'], ['while условие:', 'пока условие истинно'], ['break / continue', 'прервать / пропустить итерацию']] },
+    { em: '📦', title: 'Структуры данных', items: [['[1, 2, 3]', 'список (изменяемый)'], ['(1, 2, 3)', 'кортеж (неизменяемый)'], ['{"k": "v"}', 'словарь (ключ:значение)'], ['{1, 2, 3}', 'множество (уникальные)']] },
+    { em: '🔤', title: 'Строки', items: [['s.upper()', 'в верхний регистр'], ['s.split(",")', 'разбить по разделителю'], ['s.replace("a","b")', 'заменить подстроку'], ['s[1:4]', 'срез символов с 1 по 3']] },
+    { em: '⚙️', title: 'Функции', items: [['def f(x):', 'определить функцию'], ['return x', 'вернуть значение'], ['lambda x: x*2', 'анонимная функция'], ['f(a, b=5)', 'аргумент по умолчанию']] },
+  ]
+  return (
+    <>
+      {sections.map((s, i) => (
+        <div key={i} className="fcc-cheat-section">
+          <h3><span className="em">{s.em}</span>{s.title}</h3>
+          <div className="fcc-cheat-grid">
+            {s.items.map((it, j) => (
+              <div key={j} className="fcc-cheat-item"><code>{it[0]}</code><span className="ci-desc">{it[1]}</span></div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Home />)
+</script>
+<script>
+/* Manual Babel transform with classic runtime (React.createElement) —
+   avoids the "Cannot use import statement outside a module" error from
+   the automatic JSX runtime. Run after window load to ensure React/ReactDOM/Babel
+   are all ready. */
+window.addEventListener('load', function () {
+  try {
+    var src = document.getElementById('app-source').textContent;
+    var out = Babel.transform(src, {
+      presets: [['react', { runtime: 'classic' }]],
+      filename: 'app.js',
+    }).code;
+    var s = document.createElement('script');
+    s.textContent = out;
+    document.body.appendChild(s);
+  } catch (e) {
+    console.error('Babel transform failed:', e);
+    var d = document.getElementById('root');
+    if (d) d.innerHTML = '<div style="padding:24px;font-family:sans-serif;color:#0a0a23">Ошибка загрузки приложения: ' + (e && e.message || e) + '</div>';
+  }
+});
+</script>
+</body>
+</html>
